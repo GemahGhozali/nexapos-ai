@@ -1,16 +1,21 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
-import { Spinner } from "@/components/ui/spinner";
 import { useLogout } from "@/features/auth/hooks";
+import { Spinner } from "@/components/ui/spinner";
+import { HugeiconsIcon } from "@hugeicons/react";
+import { LogoutSquare01Icon } from "@hugeicons/core-free-icons";
+import { DropdownMenuGroup, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
 export default function LogoutButton() {
   const { logout, isPending } = useLogout();
 
   return (
-    <Button type="button" variant="destructive" disabled={isPending} onClick={() => logout()}>
-      {isPending ? "Processing" : "Logout"}
-      {isPending && <Spinner data-icon="inline-start" />}
-    </Button>
+    <DropdownMenuGroup>
+      <DropdownMenuItem variant="destructive" disabled={isPending} onClick={() => logout()}>
+        <HugeiconsIcon icon={LogoutSquare01Icon} size={24} color="currentColor" strokeWidth={2} />
+        {isPending ? "Processing" : "Logout"}
+        {isPending && <Spinner className="ml-auto" />}
+      </DropdownMenuItem>
+    </DropdownMenuGroup>
   );
 }
