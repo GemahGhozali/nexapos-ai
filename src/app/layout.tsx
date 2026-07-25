@@ -1,7 +1,8 @@
 import "./globals.css";
 import { cn } from "@/libs/shadcn";
-import { Geist, Geist_Mono, Figtree } from "next/font/google";
 import { Metadata } from "next";
+import { Toaster } from "@/components/ui/toast";
+import { Geist, Geist_Mono, Figtree } from "next/font/google";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -17,7 +18,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en" className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", figtree.variable)}>
-      <body>{children}</body>
+      <body>
+        {children}
+        <Toaster />
+      </body>
     </html>
   );
 }
