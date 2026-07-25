@@ -3,6 +3,7 @@ import { cn } from "@/libs/shadcn";
 import { Metadata } from "next";
 import { Toaster } from "@/components/ui/toast";
 import { Geist, Geist_Mono, Figtree } from "next/font/google";
+import { QueryProvider } from "@/providers/query-client";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -17,10 +18,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: Readonly<{ children: React.ReactNode }>) {
   return (
-    <html lang="en" className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", figtree.variable)}>
-      <body>
-        {children}
-        <Toaster />
+    <html
+      lang="en"
+      className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", figtree.variable)}
+    >
+      <body className="h-full">
+        <QueryProvider>
+          {children}
+          <Toaster />
+        </QueryProvider>
       </body>
     </html>
   );
