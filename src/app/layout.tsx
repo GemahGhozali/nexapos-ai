@@ -3,7 +3,8 @@ import { cn } from "@/libs/shadcn";
 import { Metadata } from "next";
 import { Toaster } from "@/components/ui/toast";
 import { Geist, Geist_Mono, Figtree } from "next/font/google";
-import { QueryProvider } from "@/providers/query-client";
+import { QueryClientProvider } from "@/providers/query-client";
+import { ThemeProvider } from "@/providers/theme";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -21,12 +22,15 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
     <html
       lang="en"
       className={cn("h-full", "antialiased", geistSans.variable, geistMono.variable, "font-sans", figtree.variable)}
+      suppressHydrationWarning
     >
       <body className="h-full">
-        <QueryProvider>
-          {children}
+        <QueryClientProvider>
           <Toaster />
-        </QueryProvider>
+          <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+            {children}
+          </ThemeProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );
