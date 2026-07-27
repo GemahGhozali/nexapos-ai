@@ -5,3 +5,8 @@ export type ActionResponse = {
   message: string;
   errors?: ErrorFields;
 };
+
+export type QueryResponse<T> = {
+  data: T | null;
+  error: string | null;
+};
