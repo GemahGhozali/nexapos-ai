@@ -1,6 +1,6 @@
 "use client";
 
-import { useLogin } from "../hooks";
+import { useLoginForm } from "../hooks";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
@@ -9,7 +9,7 @@ import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function LoginForm() {
-  const { form, onSubmit, isPending } = useLogin();
+  const { form, onSubmit, isPending } = useLoginForm();
 
   return (
     <Card className="w-full sm:max-w-md">
@@ -26,14 +26,7 @@ export default function LoginForm() {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="email">Email Address</FieldLabel>
-                  <Input
-                    {...field}
-                    id="email"
-                    type="email"
-                    aria-invalid={fieldState.invalid}
-                    placeholder="example@gmail.com"
-                    autoComplete="off"
-                  />
+                  <Input {...field} id="email" type="email" aria-invalid={fieldState.invalid} placeholder="example@gmail.com" autoComplete="off" />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}
@@ -57,7 +50,7 @@ export default function LoginForm() {
               )}
             />
             <Field>
-              <Button type="submit" size="lg" disabled={isPending}>
+              <Button type="submit" size="lg" disabled={isPending || !form.formState.isValid}>
                 {isPending ? "Processing" : "Login"}
                 {isPending && <Spinner data-icon="inline-start" />}
               </Button>

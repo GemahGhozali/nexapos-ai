@@ -3,13 +3,14 @@
 import { toast } from "@/components/ui/toast";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
+import { runAction } from "@/utils/tanstack-runner";
 import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { login, logout } from "./actions";
 import { ActionResponse } from "@/types";
 import { LoginSchema, LoginInput } from "./schemas";
 
-export function useLogin() {
+export function useLoginForm() {
   const router = useRouter();
 
   const form = useForm<LoginInput>({
@@ -22,11 +23,7 @@ export function useLogin() {
   });
 
   const { mutate, isPending, data } = useMutation({
-    mutationFn: async (data: LoginInput) => {
-      const response = await login(data);
-      if (!response.success) throw response;
-      return response;
-    },
+    mutationFn: (data: LoginInput) => runAction(() => login(data)),
     onSuccess: (response) => {
       toast.add({ type: "success", description: response.message });
       router.replace("/dashboard");
@@ -51,11 +48,7 @@ export function useLogout() {
   const router = useRouter();
 
   const { mutate, isPending } = useMutation({
-    mutationFn: async () => {
-      const response = await logout();
-      if (!response.success) throw response;
-      return response;
-    },
+    mutationFn: () => runAction(logout),
     onSuccess: (response) => {
       toast.add({ type: "success", description: response.message });
       router.replace("/login");
