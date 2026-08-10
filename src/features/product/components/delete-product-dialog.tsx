@@ -29,19 +29,19 @@ export function DeleteProductDialog({ product, onClose }: DeleteProductDialogPro
     >
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle>Are you sure?</DialogTitle>
-          <DialogDescription>This product will be deleted permanently!</DialogDescription>
+          <DialogTitle>Apakah anda yakin?</DialogTitle>
+          <DialogDescription>{product ? `Produk "${product.name}"` : "Produk ini"} akan dihapus secara permanen!</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose
             render={
               <Button variant="outline" onClick={onClose}>
-                Cancel
+                Batal
               </Button>
             }
           />
           <Button variant="destructive" type="button" disabled={isPending} onClick={handleDelete}>
-            {isPending ? "Processing" : "Delete Product"}
+            {isPending ? "Processing" : "Hapus Produk"}
             {isPending && <Spinner data-icon="inline-start" />}
           </Button>
         </DialogFooter>

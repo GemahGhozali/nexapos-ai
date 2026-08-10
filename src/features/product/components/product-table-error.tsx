@@ -14,9 +14,9 @@ export function ProductTableError({ error, refetch }: TransactionTableErrorProps
         <HugeiconsIcon icon={CancelCircleIcon} size={24} color="currentColor" strokeWidth={1.75} />
       </div>
       <p className="font-semibold text-foreground">{error.message}</p>
-      <p className="text-muted-foreground text-sm">Something went wrong, please try again.</p>
+      <p className="text-muted-foreground text-sm">Terjadi kesalahan, silahkan coba lagi.</p>
       <Button variant="secondary" className="mt-3" onClick={() => refetch()}>
-        Try Again
+        Coba Lagi
       </Button>
     </div>
   );

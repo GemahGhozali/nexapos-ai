@@ -22,7 +22,7 @@ export function ProductForm({ product }: ProductFormProps) {
     <form onSubmit={onSubmit}>
       <Card>
         <CardHeader>
-          <CardTitle>{product ? "Update Product Data" : "Create New Product"}</CardTitle>
+          <CardTitle>{product ? "Update Data Produk" : "Tambah Data Produk"}</CardTitle>
           <CardDescription>Masukkan informasi dibawah untuk membuat data produk</CardDescription>
         </CardHeader>
         <CardContent>
@@ -119,10 +119,10 @@ export function ProductForm({ product }: ProductFormProps) {
         </CardContent>
         <CardFooter className="justify-end gap-3">
           <Link href={`/dashboard/product`} className={buttonVariants({ variant: "outline" })} aria-disabled={isPending}>
-            Cancel
+            Batal
           </Link>
           <Button type="submit" size="lg" disabled={isPending || !form.formState.isValid}>
-            {isPending ? "Processing" : product ? "Update Product Data" : "Create New Product"}
+            {isPending ? "Processing" : product ? "Update Data Produk" : "Tambah Data Produk"}
             {isPending && <Spinner data-icon="inline-start" />}
           </Button>
         </CardFooter>
