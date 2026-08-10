@@ -16,7 +16,7 @@ interface UserFormProps {
   user?: User;
 }
 
-export default function UserForm({ user }: UserFormProps) {
+export function UserForm({ user }: UserFormProps) {
   const { form, isPending, onSubmit } = useUserForm(user);
 
   return (
