@@ -8,14 +8,20 @@ export async function getCurrentUserProfile() {
 
     const {
       data: { user },
-      error: authError,
     } = await supabase.auth.getUser();
 
-    if (authError || !user) return null;
+    if (!user) return null;
 
-    const { data: profile, error: dbError } = await supabase.from("profiles").select("fullname, role, profile_image").eq("id", user.id).single();
+    const { data: profile, error: getProfileError } = await supabase
+      .from("profiles")
+      .select("fullname, role, profile_image")
+      .eq("id", user.id)
+      .single();
 
-    if (dbError || !profile) return null;
+    if (getProfileError) {
+      console.log("❌ Get Current User Profile Error :", getProfileError);
+      return null;
+    }
 
     return {
       id: user.id,
@@ -25,7 +31,7 @@ export async function getCurrentUserProfile() {
       profileImage: profile.profile_image,
     };
   } catch (error) {
-    console.error("Get profile error:", error);
+    console.log("❌ Get Current User Profile Error :", error);
     return null;
   }
 }

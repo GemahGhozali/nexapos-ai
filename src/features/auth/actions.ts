@@ -1,7 +1,7 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { createClient } from "@/libs/supabase/server";
+import { revalidatePath } from "next/cache";
 import { formatZodError } from "@/utils/format-zod-error";
 import { ActionResponse } from "@/types";
 import { LoginSchema, LoginInput } from "./schemas";
@@ -29,7 +29,7 @@ export async function login(data: LoginInput): Promise<ActionResponse> {
     revalidatePath("/", "layout");
     return { success: true, message: "Login berhasil!" };
   } catch (error) {
-    console.log(error);
+    console.log("❌ Login Error :", error);
     return { success: false, message: "Terjadi kesalahan pada server!" };
   }
 }
@@ -43,7 +43,7 @@ export async function logout(): Promise<ActionResponse> {
     revalidatePath("/", "layout");
     return { success: true, message: "Logout berhasil!" };
   } catch (error) {
-    console.log(error);
+    console.log("❌ Logout Error :", error);
     return { success: false, message: "Terjadi kesalahan pada server!" };
   }
 }
