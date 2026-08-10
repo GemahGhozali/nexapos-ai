@@ -7,10 +7,7 @@ export async function getAllUsers() {
   try {
     const supabase = await createClient();
 
-    const { data, error } = await supabase
-      .from("profiles")
-      .select("id, email, fullname, role, profile_image")
-      .order("created_at", { ascending: false });
+    const { data, error } = await supabase.from("profiles").select("id, email, fullname, role, profile_image");
 
     if (error) {
       console.error("❌ Get All Users Error : ", error);
