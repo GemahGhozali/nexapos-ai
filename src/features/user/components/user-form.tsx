@@ -34,7 +34,14 @@ export default function UserForm({ user }: UserFormProps) {
               control={form.control}
               render={({ field, fieldState }) => (
                 <Field>
-                  <ImageUploader value={field.value} onChange={field.onChange} onBlur={field.onBlur} disabled={isPending} />
+                  <ImageUploader
+                    label="Profile Image (Optional)"
+                    description="JPEG, JPG, PNG and WEBP, Max. 1 MB"
+                    value={field.value}
+                    onChange={field.onChange}
+                    onBlur={field.onBlur}
+                    disabled={isPending}
+                  />
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </Field>
               )}

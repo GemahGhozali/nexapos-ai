@@ -6,13 +6,15 @@ import { Button } from "@/components/ui/button";
 import { FieldDescription, FieldLabel } from "./ui/field";
 
 interface ImageUploaderProps {
+  label: string;
+  description: string;
   value: File | string | null;
   onChange: (value: File | null) => void;
   onBlur: () => void;
   disabled?: boolean;
 }
 
-export function ImageUploader({ disabled, value, onChange, onBlur }: ImageUploaderProps) {
+export function ImageUploader({ label, description, disabled, value, onChange, onBlur }: ImageUploaderProps) {
   const fileInputRef = React.useRef<HTMLInputElement | null>(null);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -40,8 +42,8 @@ export function ImageUploader({ disabled, value, onChange, onBlur }: ImageUpload
       />
       <ImageFilePreview url={value} />
       <div className="flex flex-col gap-3 justify-center">
-        <FieldLabel>Profile Image (Optional)</FieldLabel>
-        <FieldDescription>JPEG, JPG, PNG and WEBP, Max 1 MB</FieldDescription>
+        <FieldLabel>{label}</FieldLabel>
+        <FieldDescription>{description}</FieldDescription>
 
         <div className="flex items-center gap-2">
           {!value ? (
