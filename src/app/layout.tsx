@@ -2,9 +2,10 @@ import "./globals.css";
 import { cn } from "@/libs/shadcn";
 import { Metadata } from "next";
 import { Toaster } from "@/components/ui/toast";
-import { Geist, Geist_Mono, Figtree } from "next/font/google";
-import { QueryClientProvider } from "@/providers/query-client";
 import { ThemeProvider } from "@/providers/theme";
+import { TooltipProvider } from "@/components/ui/tooltip";
+import { QueryClientProvider } from "@/providers/query-client";
+import { Geist, Geist_Mono, Figtree } from "next/font/google";
 
 const figtree = Figtree({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -28,7 +29,7 @@ export default function RootLayout({ children }: Readonly<{ children: React.Reac
         <QueryClientProvider>
           <Toaster />
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            {children}
+            <TooltipProvider>{children}</TooltipProvider>
           </ThemeProvider>
         </QueryClientProvider>
       </body>
