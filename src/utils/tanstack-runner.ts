@@ -7,7 +7,9 @@ import { QueryResponse, ActionResponse } from "@/types";
  */
 export async function runQuery<T>(queryFn: () => Promise<QueryResponse<T>>): Promise<T> {
   const response = await queryFn();
-  if (response.error || !response.data) throw response;
+  if (response.error || !response.data) {
+    throw new Error(`${response.error}`);
+  }
   return response.data;
 }
 
