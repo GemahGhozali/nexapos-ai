@@ -38,7 +38,7 @@ export async function getUserById(userId: string) {
 
     if (error) {
       console.error("❌ Get User By ID Error : ", error);
-      return { data: null, error: "Failed to fetch user data!" };
+      return { data: null, error: "User data not found!" };
     }
 
     const { profile_image, ...userData } = data;
