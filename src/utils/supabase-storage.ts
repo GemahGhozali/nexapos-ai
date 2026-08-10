@@ -18,7 +18,7 @@ export async function uploadFileToStorage({ supabase, bucket, filePath, file, up
   const { data, error } = await supabase.storage.from(bucket).upload(filePath, file, { upsert });
 
   if (error) {
-    console.log("❌ Storage Upload Error");
+    console.log("❌ Storage Upload Error :", error);
     return null;
   }
 
