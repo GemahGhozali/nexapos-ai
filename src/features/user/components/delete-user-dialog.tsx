@@ -9,7 +9,7 @@ interface DeleteUserDialogProps {
   onClose: () => void;
 }
 
-export default function DeleteUserDialog({ user, onClose }: DeleteUserDialogProps) {
+export function DeleteUserDialog({ user, onClose }: DeleteUserDialogProps) {
   const { mutateAsync: deleteUser, isPending } = useDeleteUser();
 
   const handleDelete = async () => {
@@ -29,19 +29,19 @@ export default function DeleteUserDialog({ user, onClose }: DeleteUserDialogProp
     >
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
-          <DialogTitle>Delete User Account</DialogTitle>
-          <DialogDescription>{user ? `${user.fullname}'s account` : "User's account"} will be deleted permanently</DialogDescription>
+          <DialogTitle>Apakah anda yakin?</DialogTitle>
+          <DialogDescription>{user ? `Pengguna "${user.fullname}"` : "Pengguna"} akan dihapus secara permanen!</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose
             render={
               <Button variant="outline" onClick={onClose}>
-                Cancel
+                Batal
               </Button>
             }
           />
           <Button variant="destructive" type="button" disabled={isPending} onClick={handleDelete}>
-            {isPending ? "Processing" : "Delete User"}
+            {isPending ? "Processing" : "Hapus Pengguna"}
             {isPending && <Spinner data-icon="inline-start" />}
           </Button>
         </DialogFooter>

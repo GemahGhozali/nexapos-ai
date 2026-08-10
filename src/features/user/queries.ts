@@ -14,7 +14,7 @@ export async function getAllUsers() {
 
     if (error) {
       console.error("❌ Get All Users Error : ", error);
-      return { data: null, error: "Failed to fetch user data!" };
+      return { data: null, error: "Gagal mendapatkan data pengguna!" };
     }
 
     return {
@@ -26,7 +26,7 @@ export async function getAllUsers() {
     };
   } catch (error) {
     console.error("❌ Get All Users Error : ", error);
-    return { data: null, error: "Internal server error!" };
+    return { data: null, error: "Terjadi kesalahan pada server!" };
   }
 }
 
@@ -38,7 +38,7 @@ export async function getUserById(userId: string) {
 
     if (error) {
       console.error("❌ Get User By ID Error : ", error);
-      return { data: null, error: "User data not found!" };
+      return { data: null, error: "Data pengguna tidak ditemukan!" };
     }
 
     const { profile_image, ...userData } = data;
@@ -47,6 +47,6 @@ export async function getUserById(userId: string) {
     return { data: { ...userData, profileImage }, error: null };
   } catch (error) {
     console.error("❌ Get User By ID Error : ", error);
-    return { data: null, error: "Internal server error!" };
+    return { data: null, error: "Terjadi kesalahan pada server!" };
   }
 }

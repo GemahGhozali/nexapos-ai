@@ -30,7 +30,7 @@ export function DeleteProductDialog({ product, onClose }: DeleteProductDialogPro
       <DialogContent className="sm:max-w-sm">
         <DialogHeader>
           <DialogTitle>Apakah anda yakin?</DialogTitle>
-          <DialogDescription>{product ? `Produk "${product.name}"` : "Produk ini"} akan dihapus secara permanen!</DialogDescription>
+          <DialogDescription>{product ? `Produk "${product.name}"` : "Produk"} akan dihapus secara permanen!</DialogDescription>
         </DialogHeader>
         <DialogFooter>
           <DialogClose

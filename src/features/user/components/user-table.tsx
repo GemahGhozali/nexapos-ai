@@ -1,36 +1,32 @@
 "use client";
 
+import Link from "next/link";
 import { User } from "../types";
 import { useState } from "react";
 import { useAllUsers } from "../hooks";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { UserTableError } from "./user-table-error";
+import { UserTableEmpty } from "./user-table-empty";
+import { DeleteUserDialog } from "./delete-user-dialog";
+import { UserTableSkeleton } from "./user-table-skeleton";
 import { generateNameInitials } from "@/utils/generate-name-initials";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { HashtagIcon, PencilEdit02Icon, Delete02Icon, PlusSignIcon } from "@hugeicons/core-free-icons";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import DeleteUserDialog from "./delete-user-dialog";
-import Link from "next/link";
-import { Skeleton } from "@/components/ui/skeleton";
 
 export function UserTable() {
-  const { data, isPending, isFetching, isError, error } = useAllUsers();
+  const { data, isPending, isFetching, isError, error, refetch } = useAllUsers();
 
   const [selectedUser, setSelectedUser] = useState<Omit<User, "password"> | null>(null);
 
   const renderTable = () => {
-    if (isPending || isFetching) {
-      return (
-        <div className="space-y-4">
-          <Skeleton className="w-full h-24" />
-        </div>
-      );
-    }
+    if (isPending || isFetching) return <UserTableSkeleton />;
 
-    if (isError) return <p>{error.message}</p>;
+    if (isError) return <UserTableError error={error} refetch={refetch} />;
 
-    if (data.length === 0) return <p>No user data currently</p>;
+    if (data.length === 0) return <UserTableEmpty />;
 
     return (
       <Table>
@@ -76,11 +72,11 @@ export function UserTable() {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>User Data</CardTitle>
-          <CardDescription>See all user accounts here.</CardDescription>
+          <CardTitle>Data Pengguna</CardTitle>
+          <CardDescription>Daftar semua akun pengguna di dalam aplikasi</CardDescription>
           <CardAction>
             <Link href="/dashboard/user/create" className={buttonVariants({ variant: "default" })}>
-              Add User
+              Tambah Pengguna
               <HugeiconsIcon icon={PlusSignIcon} size={16} color="currentColor" strokeWidth={1.5} data-icon="inline-end" />
             </Link>
           </CardAction>

@@ -23,8 +23,8 @@ export default function UserForm({ user }: UserFormProps) {
     <form onSubmit={onSubmit}>
       <Card>
         <CardHeader>
-          <CardTitle>{user ? "Update User Data" : "Create New User"}</CardTitle>
-          <CardDescription>Insert user identity, account and set role permission</CardDescription>
+          <CardTitle>{user ? "Update Data Pengguna" : "Tambah Data Pengguna"}</CardTitle>
+          <CardDescription>Tentukan profil, akun dan hak akses pengguna di dalam aplikasi</CardDescription>
         </CardHeader>
         <CardContent>
           <FieldGroup>
@@ -35,8 +35,8 @@ export default function UserForm({ user }: UserFormProps) {
               render={({ field, fieldState }) => (
                 <Field>
                   <ImageUploader
-                    label="Profile Image (Optional)"
-                    description="JPEG, JPG, PNG and WEBP, Max. 1 MB"
+                    label="Gambar Profil (Opsional)"
+                    description="JPEG, JPG, PNG and WEBP, Maks. 1 MB"
                     value={field.value}
                     onChange={field.onChange}
                     onBlur={field.onBlur}
@@ -54,14 +54,14 @@ export default function UserForm({ user }: UserFormProps) {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="fullname">
-                    Fullname <span className="text-red-600">*</span>
+                    Nama Lengkap <span className="text-red-600">*</span>
                   </FieldLabel>
                   <Input
                     {...field}
                     id="fullname"
                     type="text"
                     aria-invalid={fieldState.invalid}
-                    placeholder="Enter fullname here..."
+                    placeholder="Masukkan nama lengkap disini..."
                     autoComplete="off"
                     disabled={isPending}
                   />
@@ -69,6 +69,7 @@ export default function UserForm({ user }: UserFormProps) {
                 </Field>
               )}
             />
+
             {/* Email */}
             <Controller
               name="email"
@@ -76,14 +77,14 @@ export default function UserForm({ user }: UserFormProps) {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="email">
-                    Email Address <span className="text-red-600">*</span>
+                    Alamat Email <span className="text-red-600">*</span>
                   </FieldLabel>
                   <Input
                     {...field}
                     id="email"
                     type="email"
                     aria-invalid={fieldState.invalid}
-                    placeholder="Enter email address here..."
+                    placeholder="Masukkan alamat email disini..."
                     autoComplete="off"
                     disabled={isPending}
                   />
@@ -91,6 +92,7 @@ export default function UserForm({ user }: UserFormProps) {
                 </Field>
               )}
             />
+
             {/* Password */}
             <Controller
               name="password"
@@ -98,16 +100,16 @@ export default function UserForm({ user }: UserFormProps) {
               render={({ field, fieldState }) => (
                 <Field data-invalid={fieldState.invalid}>
                   <FieldLabel htmlFor="password">
-                    {user ? "New Password (Optional)" : "Password"}
+                    {user ? "Password Baru (Opsional)" : "Password"}
                     {!user && <span className="text-red-600">*</span>}
                   </FieldLabel>
-                  {user && <FieldDescription>Old password will be replaced by the new one</FieldDescription>}
+                  {user && <FieldDescription>Password lama akan diganti dengan password baru</FieldDescription>}
                   <Input
                     {...field}
                     id="password"
                     type="text"
                     aria-invalid={fieldState.invalid}
-                    placeholder={user ? "Enter new password here..." : "Enter password here..."}
+                    placeholder={user ? "Masukkan password disini..." : "Masukkan password disini..."}
                     autoComplete="off"
                     disabled={isPending}
                   />
@@ -115,6 +117,7 @@ export default function UserForm({ user }: UserFormProps) {
                 </Field>
               )}
             />
+
             {/* Role */}
             <Controller
               name="role"
@@ -122,7 +125,7 @@ export default function UserForm({ user }: UserFormProps) {
               render={({ field, fieldState }) => (
                 <FieldSet data-invalid={fieldState.invalid}>
                   <FieldLabel>
-                    Role <span className="text-red-600">*</span>
+                    Hak Akses <span className="text-red-600">*</span>
                   </FieldLabel>
                   <RadioGroup
                     name={field.name}
@@ -135,8 +138,8 @@ export default function UserForm({ user }: UserFormProps) {
                     <FieldLabel htmlFor="cashier">
                       <Field orientation="horizontal" data-invalid={fieldState.invalid}>
                         <FieldContent>
-                          <FieldTitle>Cashier</FieldTitle>
-                          <FieldDescription>Limited to manage transaction, cashier and cashflow only</FieldDescription>
+                          <FieldTitle>Kasir</FieldTitle>
+                          <FieldDescription>Terbatas pada fitur manajemen transaksi, arus kas dan kasir</FieldDescription>
                         </FieldContent>
                         <RadioGroupItem value="cashier" id="cashier" aria-invalid={fieldState.invalid} />
                       </Field>
@@ -146,7 +149,7 @@ export default function UserForm({ user }: UserFormProps) {
                       <Field orientation="horizontal" data-invalid={fieldState.invalid}>
                         <FieldContent>
                           <FieldTitle>Admin</FieldTitle>
-                          <FieldDescription>Have full access to all application features and master data</FieldDescription>
+                          <FieldDescription>Memiliki hak akses penuh terhadap seluruh fitur aplikasi</FieldDescription>
                         </FieldContent>
                         <RadioGroupItem value="admin" id="admin" aria-invalid={fieldState.invalid} />
                       </Field>
@@ -160,10 +163,10 @@ export default function UserForm({ user }: UserFormProps) {
         </CardContent>
         <CardFooter className="justify-end gap-3">
           <Link href={`/dashboard/user`} className={buttonVariants({ variant: "outline" })} aria-disabled={isPending}>
-            Cancel
+            Batal
           </Link>
           <Button type="submit" size="lg" disabled={isPending || !form.formState.isValid}>
-            {isPending ? "Processing" : user ? "Update User Data" : "Create New User"}
+            {isPending ? "Processing" : user ? "Update Data Pengguna" : "Tambah Data Pengguna"}
             {isPending && <Spinner data-icon="inline-start" />}
           </Button>
         </CardFooter>

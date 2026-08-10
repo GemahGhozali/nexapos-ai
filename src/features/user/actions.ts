@@ -15,7 +15,7 @@ export async function createUser(data: CreateUserInput) {
     if (!validated.success) {
       return {
         success: false,
-        message: "Invalid user data!",
+        message: "Data pengguna tidak valid!",
         errors: formatZodError(validated.error),
       };
     }
@@ -29,16 +29,16 @@ export async function createUser(data: CreateUserInput) {
     if (createAccountError && createAccountError.status === 422) {
       return {
         success: false,
-        message: "Failed to create user data!",
+        message: "Gagal membuat data pengguna!",
         errors: {
-          email: "Email already in used! Please try different email.",
+          email: "Email telah digunakan! Silahkan gunakan email lain.",
         },
       };
     }
 
     if (createAccountError) {
       console.error("❌ Create User Error :", createAccountError);
-      return { success: false, message: "Failed to create user data!" };
+      return { success: false, message: "Gagal membuat data pengguna!" };
     }
 
     const userId = account.user.id;
@@ -49,7 +49,7 @@ export async function createUser(data: CreateUserInput) {
     if (profileImage instanceof File) {
       const imageUrl = await uploadProfileImage({ supabase, userId, file: profileImage });
 
-      if (!imageUrl) return { success: false, message: "Failed to upload user profile image!" };
+      if (!imageUrl) return { success: false, message: "Gagal mengupload profil pengguna!" };
 
       profileImageUrl = imageUrl;
     }
@@ -62,13 +62,13 @@ export async function createUser(data: CreateUserInput) {
     if (createProfileError) {
       console.error("❌ Create User Error :", createProfileError);
       await supabase.auth.admin.deleteUser(userId);
-      return { success: false, message: "Failed to create user data!" };
+      return { success: false, message: "Gagal membuat data pengguna!" };
     }
 
-    return { success: true, message: "User data successfully created!" };
+    return { success: true, message: "Data pengguna berhasil dibuat!" };
   } catch (error) {
     console.error("❌ Create User Error :", error);
-    return { success: false, message: "Internal server error!" };
+    return { success: false, message: "Terjadi kesalahan pada server!" };
   }
 }
 
@@ -81,7 +81,7 @@ export async function updateUser(userId: string, data: UpdateUserInput) {
     if (!validated.success) {
       return {
         success: false,
-        message: "Invalid user data!",
+        message: "Data pengguna tidak valid!",
         errors: formatZodError(validated.error),
       };
     }
@@ -97,7 +97,7 @@ export async function updateUser(userId: string, data: UpdateUserInput) {
 
     if (getCurrentUserError) {
       console.error("❌ Update User Error:", getCurrentUserError);
-      return { success: false, message: "User not found!" };
+      return { success: false, message: "Data pengguna tidak ditemukan!" };
     }
 
     // Update data akun email dan password (jika terdapat perubahan)
@@ -134,13 +134,13 @@ export async function updateUser(userId: string, data: UpdateUserInput) {
 
     if (updateProfileError) {
       console.error("❌ Update User Error :", updateProfileError);
-      return { success: false, message: "Failed to update user data!" };
+      return { success: false, message: "Gagal memperbarui data pengguna!" };
     }
 
-    return { success: true, message: "User data successfully updated!" };
+    return { success: true, message: "Data pengguna berhasil diperbarui!" };
   } catch (error) {
     console.error("❌ Update User Error :", error);
-    return { success: false, message: "Internal server error!" };
+    return { success: false, message: "Terjadi kesalahan pada server!" };
   }
 }
 
@@ -150,25 +150,25 @@ export async function deleteUser(userId: string) {
 
     const { data: user } = await supabase.from("profiles").select("profile_image").eq("id", userId).single();
 
-    if (!user) return { success: false, message: "User not found!" };
+    if (!user) return { success: false, message: "Data pengguna tidak ditemukan!" };
 
     // Jika user memiliki profil gambar sebelumnya, maka hapus filenya
     if (user.profile_image) {
       const imageDeleted = await deleteFilesFromStorage({ supabase, bucket: "images", filePaths: [user.profile_image] });
 
-      if (!imageDeleted) return { success: false, message: "Failed to delete user profile image!" };
+      if (!imageDeleted) return { success: false, message: "Gagal menghapus profil pengguna!" };
     }
 
     const { error } = await supabase.auth.admin.deleteUser(userId);
 
     if (error) {
       console.error("❌ Delete User Error:", error);
-      return { success: false, message: "Failed to delete user data!" };
+      return { success: false, message: "Gagal menghapus data pengguna!" };
     }
 
-    return { success: true, message: "User data successfully deleted!" };
+    return { success: true, message: "Data pengguna berhasil dihapus!" };
   } catch (error) {
     console.error("❌ Delete User Error:", error);
-    return { success: false, message: "Internal server error!" };
+    return { success: false, message: "Terjadi kesalahan pada server!" };
   }
 }

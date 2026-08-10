@@ -48,16 +48,16 @@ export async function handleUpdateAccount({ supabase, userId, data }: HandleUpda
 
   const shouldUpdateAccount = Object.keys(accountUpdatePayload).length > 0;
 
-  if (!shouldUpdateAccount) return { success: true, message: "Account does not need to be updated!" };
+  if (!shouldUpdateAccount) return { success: true, message: "Data pengguna tidak perlu diperbarui." };
 
   const { error: updateAccountError } = await supabase.auth.admin.updateUserById(userId, accountUpdatePayload);
 
   if (updateAccountError) {
     console.error("❌ Update User Error:", updateAccountError);
-    return { success: false, message: "Failed to update user data!" };
+    return { success: false, message: "Gagal memperbarui data pengguna!" };
   }
 
-  return { success: true, message: "Account successfully updated!" };
+  return { success: true, message: "Data pengguna berhasil diperbarui!" };
 }
 
 export async function handleProfileImageUpdate({ supabase, userId, profileImage, currentImageUrl = null }: HandleProfileImageParams) {
@@ -72,7 +72,7 @@ export async function handleProfileImageUpdate({ supabase, userId, profileImage,
   if (shouldDeleteOldImage && currentImageUrl) {
     const imageDeleted = await deleteFilesFromStorage({ supabase, bucket: "images", filePaths: [currentImageUrl] });
 
-    if (!imageDeleted) return { success: false, avatarUrl: currentImageUrl, message: "Failed to delete old user profile image!" };
+    if (!imageDeleted) return { success: false, avatarUrl: currentImageUrl, message: "Gagal menghapus profil lama pengguna!" };
 
     avatarUrl = null;
   }
@@ -80,10 +80,10 @@ export async function handleProfileImageUpdate({ supabase, userId, profileImage,
   if (isUploadingNewImage) {
     const imageUrl = await uploadProfileImage({ supabase, userId, file: profileImage });
 
-    if (!imageUrl) return { success: false, avatarUrl: null, message: "Failed to upload new user profile image!" };
+    if (!imageUrl) return { success: false, avatarUrl: null, message: "Gagal mengupload profil baru pengguna!" };
 
     avatarUrl = imageUrl;
   }
 
-  return { success: true, avatarUrl, message: "User profile successfully updated!" };
+  return { success: true, avatarUrl, message: "Profil pengguna berhasil diperbarui!" };
 }
