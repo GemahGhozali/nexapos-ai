@@ -1,12 +1,12 @@
 "use client";
 
-import { useLogout } from "@/features/auth/hooks";
 import { Spinner } from "@/components/ui/spinner";
+import { useLogout } from "@/features/auth/hooks";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { LogoutSquare01Icon } from "@hugeicons/core-free-icons";
 import { DropdownMenuGroup, DropdownMenuItem } from "@/components/ui/dropdown-menu";
 
-export default function LogoutButton() {
+export function LogoutButton() {
   const { logout, isPending } = useLogout();
 
   return (

@@ -1,12 +1,12 @@
-import LogoutButton from "./logout-button";
-import ThemeToggler from "./theme-toggler";
 import { Button } from "@/components/ui/button";
-import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
+import { LogoutButton } from "./logout-button";
+import { ThemeToggler } from "./theme-toggler";
 import { generateNameInitials } from "@/utils/generate-name-initials";
 import { getCurrentUserProfile } from "@/features/auth/queries";
+import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-export default async function UserProfile() {
+export async function UserProfile() {
   const user = await getCurrentUserProfile();
 
   return (

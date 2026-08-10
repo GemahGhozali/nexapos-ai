@@ -5,7 +5,7 @@ import { HugeiconsIcon } from "@hugeicons/react";
 import { Moon02Icon, Sun03Icon, Settings01Icon } from "@hugeicons/core-free-icons";
 import { DropdownMenuGroup, DropdownMenuLabel, DropdownMenuRadioGroup, DropdownMenuRadioItem } from "@/components/ui/dropdown-menu";
 
-export default function ThemeToggler() {
+export function ThemeToggler() {
   const { theme, setTheme } = useTheme();
 
   return (
