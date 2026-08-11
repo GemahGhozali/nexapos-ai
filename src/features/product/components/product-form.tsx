@@ -6,6 +6,7 @@ import { Product } from "../types";
 import { Spinner } from "@/components/ui/spinner";
 import { Controller } from "react-hook-form";
 import { ImageUploader } from "@/components/image-uploader";
+import { CategorySelect } from "./category-select";
 import { useProductForm } from "../hooks";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Field, FieldDescription, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -115,6 +116,9 @@ export function ProductForm({ product }: ProductFormProps) {
                 </Field>
               )}
             />
+
+            {/* Category */}
+            <CategorySelect form={form} disabled={isPending} />
           </FieldGroup>
         </CardContent>
         <CardFooter className="justify-end gap-3">
@@ -122,7 +126,7 @@ export function ProductForm({ product }: ProductFormProps) {
             Batal
           </Link>
           <Button type="submit" size="lg" disabled={isPending || !form.formState.isValid}>
-            {isPending ? "Processing" : product ? "Update Data Produk" : "Tambah Data Produk"}
+            {isPending ? "Memproses" : product ? "Update Data Produk" : "Tambah Data Produk"}
             {isPending && <Spinner data-icon="inline-start" />}
           </Button>
         </CardFooter>
