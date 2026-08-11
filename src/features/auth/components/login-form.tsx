@@ -1,10 +1,10 @@
 "use client";
 
-import { useLoginForm } from "../hooks";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Spinner } from "@/components/ui/spinner";
 import { Controller } from "react-hook-form";
+import { useLoginForm } from "../hooks";
 import { Field, FieldError, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -51,7 +51,7 @@ export default function LoginForm() {
             />
             <Field>
               <Button type="submit" size="lg" disabled={isPending || !form.formState.isValid}>
-                {isPending ? "Processing" : "Login"}
+                {isPending ? "Memproses" : "Login"}
                 {isPending && <Spinner data-icon="inline-start" />}
               </Button>
             </Field>

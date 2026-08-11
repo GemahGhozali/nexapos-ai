@@ -42,7 +42,7 @@ export function DeleteCategoryDialog({ open, category, onClose }: DeleteCategory
             }
           />
           <Button variant="destructive" type="button" disabled={isPending} onClick={handleDelete}>
-            {isPending ? "Processing" : "Hapus Kategori"}
+            {isPending ? "Memproses" : "Hapus Kategori"}
             {isPending && <Spinner data-icon="inline-start" />}
           </Button>
         </DialogFooter>

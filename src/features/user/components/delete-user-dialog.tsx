@@ -41,7 +41,7 @@ export function DeleteUserDialog({ user, onClose }: DeleteUserDialogProps) {
             }
           />
           <Button variant="destructive" type="button" disabled={isPending} onClick={handleDelete}>
-            {isPending ? "Processing" : "Hapus Pengguna"}
+            {isPending ? "Memproses" : "Hapus Pengguna"}
             {isPending && <Spinner data-icon="inline-start" />}
           </Button>
         </DialogFooter>

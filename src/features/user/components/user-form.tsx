@@ -166,7 +166,7 @@ export function UserForm({ user }: UserFormProps) {
             Batal
           </Link>
           <Button type="submit" size="lg" disabled={isPending || !form.formState.isValid}>
-            {isPending ? "Processing" : user ? "Update Data Pengguna" : "Tambah Data Pengguna"}
+            {isPending ? "Memproses" : user ? "Update Data Pengguna" : "Tambah Data Pengguna"}
             {isPending && <Spinner data-icon="inline-start" />}
           </Button>
         </CardFooter>

@@ -41,7 +41,7 @@ export function DeleteProductDialog({ product, onClose }: DeleteProductDialogPro
             }
           />
           <Button variant="destructive" type="button" disabled={isPending} onClick={handleDelete}>
-            {isPending ? "Processing" : "Hapus Produk"}
+            {isPending ? "Memproses" : "Hapus Produk"}
             {isPending && <Spinner data-icon="inline-start" />}
           </Button>
         </DialogFooter>
