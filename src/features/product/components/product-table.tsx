@@ -57,7 +57,7 @@ export function ProductTable() {
               <TableCell>{product.name}</TableCell>
               <TableCell>{formatToIDR(product.hpp)}</TableCell>
               <TableCell>{formatToIDR(product.price)}</TableCell>
-              <TableCell className={cn(!product.category && "italic")}>{product.category?.name ?? "Tidak Terkategori"}</TableCell>
+              <TableCell className={cn(!product.category && "italic")}>{product.category ? product.category.name : "Tidak Terkategori"}</TableCell>
               <TableCell className="space-x-2">
                 <Link href={`/dashboard/product/${product.id}/update`} className={buttonVariants({ variant: "outline", size: "icon" })}>
                   <HugeiconsIcon icon={PencilEdit02Icon} size={16} color="currentColor" strokeWidth={1.5} />

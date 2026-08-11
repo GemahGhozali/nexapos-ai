@@ -17,7 +17,7 @@ export async function getAllProducts() {
     return {
       error: null,
       data: data.map((product) => {
-        const category = product.category ? product.category[0] : null;
+        const category = Array.isArray(product.category) ? product.category[0] : product.category;
         const image = product.image ? `${ENVIRONMENT.SUPABASE_STORAGE_URL}/images/${product.image}` : null;
         return { ...product, category, image };
       }),
@@ -43,7 +43,7 @@ export async function getProductById(productId: string) {
       return { data: null, error: "Data produk tidak ditemukan!" };
     }
 
-    const category = data.category ? data.category[0].id : null;
+    const category = Array.isArray(data.category) ? data.category[0] : data.category;
     const image = data.image ? `${ENVIRONMENT.SUPABASE_STORAGE_URL}/images/${data.image}` : null;
 
     return { error: null, data: { ...data, category, image } };
