@@ -18,7 +18,7 @@ export function ShoppingCartItem({ item }: ShoppingCartItemProps) {
           {item.image ? (
             <Image src={item.image} alt={item.name} fill className="object-cover" />
           ) : (
-            <div className="grid place-content-center size-full bg-muted">
+            <div className="grid place-content-center size-full bg-muted text-muted-foreground">
               <HugeiconsIcon icon={Image03Icon} size={16} strokeWidth={1.5} color="currentColor" />
             </div>
           )}

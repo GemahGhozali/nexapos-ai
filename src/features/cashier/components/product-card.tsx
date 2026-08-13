@@ -36,7 +36,7 @@ export function ProductCard({ product }: ProductCardProps) {
         {product.image ? (
           <Image src={product.image} alt={product.name} fill className="object-cover" />
         ) : (
-          <div className="grid place-content-center size-full bg-muted">
+          <div className="grid place-content-center size-full bg-muted text-muted-foreground">
             <HugeiconsIcon icon={Image03Icon} size={64} strokeWidth={1.5} color="currentColor" />
           </div>
         )}
