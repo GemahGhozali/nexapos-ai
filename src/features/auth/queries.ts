@@ -25,7 +25,7 @@ export async function getCurrentUserProfile() {
 
     return {
       id: user.id,
-      email: user.email,
+      email: user.email as string,
       fullname: profile.fullname,
       role: profile.role,
       profileImage: profile.profile_image,
