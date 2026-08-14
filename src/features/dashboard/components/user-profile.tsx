@@ -1,31 +1,36 @@
-import { Button } from "@/components/ui/button";
+import { User } from "@/features/user/types";
 import { LogoutButton } from "./logout-button";
 import { ThemeToggler } from "./theme-toggler";
+import { SidebarMenuButton } from "@/components/ui/sidebar";
 import { generateNameInitials } from "@/utils/generate-name-initials";
-import { getCurrentUserProfile } from "@/features/auth/queries";
-import { Avatar, AvatarBadge, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 
-export async function UserProfile() {
-  const user = await getCurrentUserProfile();
+interface UserProfileProps {
+  user: User;
+}
 
+export function UserProfile({ user }: UserProfileProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger
         render={
-          <Button variant="ghost" size="icon-lg" className="rounded-full">
+          <SidebarMenuButton className="p-3 h-auto gap-3">
             <Avatar size="lg">
-              <AvatarImage src={user?.profileImage} alt="shadcn" />
-              <AvatarFallback className="font-semibold">{generateNameInitials(user?.fullname)}</AvatarFallback>
-              <AvatarBadge className="bg-green-600 dark:bg-green-800" />
+              <AvatarImage src={user.profileImage || ""} alt="shadcn" />
+              <AvatarFallback className="font-semibold">{generateNameInitials(user.fullname)}</AvatarFallback>
             </Avatar>
-          </Button>
+            <div>
+              <p className="text-sm">{user.fullname}</p>
+              <p className="text-sm text-muted-foreground">{user.email}</p>
+            </div>
+          </SidebarMenuButton>
         }
       />
-      <DropdownMenuContent className="w-80">
+      <DropdownMenuContent>
         <div className="p-3">
-          <h6>{user ? user.fullname : "Full Name"}</h6>
-          <p className="text-sm text-muted-foreground">{user ? user.email : "account@gmail.com"}</p>
+          <p>{user.fullname}</p>
+          <p className="text-sm text-muted-foreground">{user.email}</p>
         </div>
         <DropdownMenuSeparator />
         <ThemeToggler />
