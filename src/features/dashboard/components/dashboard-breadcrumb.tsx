@@ -3,12 +3,14 @@
 import Link from "next/link";
 import { Fragment } from "react";
 import { segmentMapping } from "../constants";
+import { filterRouteGroupFromSegments } from "../utils";
 import { useSelectedLayoutSegments, useParams } from "next/navigation";
 import { Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList, BreadcrumbPage, BreadcrumbSeparator } from "@/components/ui/breadcrumb";
 
 export function DashboardBreadcrumb() {
   const params = useParams();
-  const segments = useSelectedLayoutSegments();
+  const rawSegments = useSelectedLayoutSegments();
+  const segments = filterRouteGroupFromSegments(rawSegments);
 
   const dynamicValues = Object.values(params).flat();
   const breadcrumbItems = segments.filter((segment) => !dynamicValues.includes(segment));

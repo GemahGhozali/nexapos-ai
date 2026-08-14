@@ -17,7 +17,8 @@ import { cn } from "@/libs/shadcn";
 import { User } from "@/features/user/types";
 import { UserProfile } from "./user-profile";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { useSelectedLayoutSegment } from "next/navigation";
+import { useSelectedLayoutSegments } from "next/navigation";
+import { filterRouteGroupFromSegments } from "../utils";
 import { adminMenus, mainMenus, masterDataMenus } from "../constants";
 
 interface DashboardSidebarProps {
@@ -42,7 +43,10 @@ const sidebarGroups = [
 ];
 
 export function DashboardSidebar({ user }: DashboardSidebarProps) {
-  const segment = useSelectedLayoutSegment();
+  const rawSegments = useSelectedLayoutSegments();
+  const segments = filterRouteGroupFromSegments(rawSegments);
+
+  const activeSegment = segments[0] ?? null;
 
   const filteredGroups = sidebarGroups.filter((group) => {
     if (!group.roles) return true;
@@ -67,7 +71,7 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
                       href={menu.href}
                       className={cn(
                         "w-full flex items-center gap-2 p-3 text-muted-foreground",
-                        segment === menu.segment && "bg-primary text-white font-medium",
+                        activeSegment === menu.segment && "bg-primary text-white font-medium",
                       )}
                     >
                       <HugeiconsIcon icon={menu.icon} size={24} color="currentColor" strokeWidth={2} />
