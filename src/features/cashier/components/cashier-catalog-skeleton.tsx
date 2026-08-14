@@ -3,7 +3,7 @@ import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/comp
 
 export function CashierCatalogSkeleton() {
   return (
-    <div className="space-y-4">
+    <div className="space-y-6">
       <div className="overflow-x-auto scrollbar-none">
         <div className="flex gap-3">
           {Array.from({ length: 6 }).map((_, i) => (

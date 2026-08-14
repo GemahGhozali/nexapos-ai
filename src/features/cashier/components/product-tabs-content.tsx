@@ -4,8 +4,8 @@ import { useMemo } from "react";
 import { Product } from "@/features/product/types";
 import { ProductCard } from "./product-card";
 import { TabsContent } from "@/components/ui/tabs";
-import { HugeiconsIcon } from "@hugeicons/react";
 import { PackageIcon } from "@hugeicons/core-free-icons";
+import { HugeiconsIcon } from "@hugeicons/react";
 
 interface ProductCatalogProps {
   products: Product[];
@@ -27,7 +27,7 @@ export function ProductTabsContent({ products, selectedCategory }: ProductCatalo
         </div>
         <div className="space-x-1">
           <p className="font-semibold text-foreground font-heading">Produk tidak ditemukan</p>
-          <p className="text-muted-foreground">Tidak ada produk yang masuk ke dalam kategori {`'${selectedCategory}'`}</p>
+          <p className="text-muted-foreground text-sm">Tidak ada produk yang masuk ke dalam kategori {`'${selectedCategory}'`}</p>
         </div>
       </div>
     );

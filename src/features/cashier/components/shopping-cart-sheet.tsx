@@ -1,14 +1,16 @@
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { formatToIDR } from "@/utils/format-to-idr";
 import { useCartStore } from "../stores";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { ShoppingCartItem } from "./shopping-cart-item";
-import { ShoppingCart01Icon } from "@hugeicons/core-free-icons";
-import { Sheet, SheetContent, SheetDescription, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
+import { Cancel01Icon, ShoppingCart01Icon } from "@hugeicons/core-free-icons";
+import { Sheet, SheetClose, SheetContent, SheetFooter, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 
 export function CartSheet() {
   const cart = useCartStore((state) => state.cart);
   const itemQuantity = useCartStore((state) => state.cart.reduce((total, item) => total + item.quantity, 0));
+  const totalPrice = useCartStore((state) => state.cart.reduce((total, item) => total + item.price * item.quantity, 0));
 
   const renderItems = () => {
     if (itemQuantity === 0) {
@@ -42,15 +44,23 @@ export function CartSheet() {
           </Button>
         }
       />
-      <SheetContent>
-        <SheetHeader className="border-b p-4">
+      <SheetContent showCloseButton={false}>
+        <SheetHeader className="border-b p-4 flex-row justify-between items-center">
           <SheetTitle>Keranjang Belanja</SheetTitle>
-          <SheetDescription>Daftar item yang dimasukkan ke keranjang</SheetDescription>
+          <SheetClose
+            render={
+              <Button variant="ghost" size="icon-sm">
+                <HugeiconsIcon icon={Cancel01Icon} size={16} strokeWidth={2} color="currentColor" />
+              </Button>
+            }
+          />
         </SheetHeader>
         {renderItems()}
-        <SheetFooter className="border-t p-4">
-          <Button disabled={itemQuantity === 0}>Checkout Pemesanan</Button>
-        </SheetFooter>
+        {itemQuantity > 0 && (
+          <SheetFooter className="border-t p-4 space-y-4">
+            <Button>Checkout - {formatToIDR(totalPrice)}</Button>
+          </SheetFooter>
+        )}
       </SheetContent>
     </Sheet>
   );
