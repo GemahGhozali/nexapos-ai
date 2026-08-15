@@ -4,6 +4,7 @@ import { redirect } from "next/navigation";
 import { createClient } from "@/libs/supabase/server";
 import { formatZodError } from "@/utils/format-zod-error";
 import { revalidatePath } from "next/cache";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { getCurrentUserAndActiveShift } from "./queries";
 import { OpeningShiftSchema, OpeningShiftInput, ClosingShiftSchema, ClosingShiftInput } from "./schemas";
 
@@ -40,6 +41,7 @@ export async function openShift(data: OpeningShiftInput) {
 
     return { success: true, message: "Shift berhasil dibuka!" };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.log("❌ Open Shift Error:", error);
     return { success: false, message: "Terjadi kesalahan pada server!" };
   }
@@ -102,6 +104,7 @@ export async function closeShift(data: ClosingShiftInput) {
 
     return { success: true, message: "Shift berhasil ditutup!" };
   } catch (error) {
+    if (isRedirectError(error)) throw error;
     console.log("❌ Close Shift Error:", error);
     return { success: false, message: "Terjadi kesalahan pada server!" };
   }
