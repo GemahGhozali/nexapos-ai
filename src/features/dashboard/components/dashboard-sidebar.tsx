@@ -19,7 +19,7 @@ import { UserProfile } from "./user-profile";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { filterRouteGroupFromSegments } from "../utils";
-import { adminMenus, mainMenus, masterDataMenus } from "../constants";
+import { adminMenus, operationalMenus, masterDataMenus } from "../constants";
 
 interface DashboardSidebarProps {
   user: User;
@@ -28,7 +28,7 @@ interface DashboardSidebarProps {
 const sidebarGroups = [
   {
     title: "MENU OPERASIONAL",
-    items: mainMenus,
+    items: operationalMenus,
   },
   {
     title: "MENU ADMIN",

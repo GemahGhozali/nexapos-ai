@@ -11,7 +11,7 @@ import {
   Money03Icon,
 } from "@hugeicons/core-free-icons";
 
-export const mainMenus = [
+export const operationalMenus = [
   {
     label: "Dashboard",
     segment: null,
@@ -80,7 +80,7 @@ export const masterDataMenus = [
   },
 ];
 
-const allMenus = [...mainMenus, ...adminMenus, ...masterDataMenus];
+const allMenus = [...operationalMenus, ...adminMenus, ...masterDataMenus];
 
 const mappedSegment: Record<string, string> = Object.fromEntries(
   allMenus.filter((menu) => menu.segment !== null).map((menu) => [menu.segment, menu.label]),
