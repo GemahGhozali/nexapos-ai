@@ -7,8 +7,8 @@ import {
   RoboticIcon,
   TransactionHistoryIcon,
   Analytics01Icon,
-  ReverseWithdrawal01Icon,
   Money03Icon,
+  Wallet01Icon,
 } from "@hugeicons/core-free-icons";
 
 export const operationalMenus = [
@@ -31,10 +31,10 @@ export const operationalMenus = [
     icon: TransactionHistoryIcon,
   },
   {
-    label: "Catat Pengeluaran",
-    segment: "expense",
-    href: "/dashboard/expense",
-    icon: ReverseWithdrawal01Icon,
+    label: "Kas Operasional",
+    segment: "operational-cashflow",
+    href: "/dashboard/operational-cashflow",
+    icon: Wallet01Icon,
   },
 ];
 
@@ -46,9 +46,9 @@ export const adminMenus = [
     icon: Analytics01Icon,
   },
   {
-    label: "Aliran Arus Kas",
-    segment: "cashflow",
-    href: "/dashboard/cashflow",
+    label: "Riwayat Mutasi Kas",
+    segment: "cashflow-mutation",
+    href: "/dashboard/cashflow-mutation",
     icon: Money03Icon,
   },
   {
