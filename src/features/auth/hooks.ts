@@ -4,11 +4,12 @@ import { toast } from "@/components/ui/toast";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { runAction } from "@/utils/tanstack-runner";
-import { useMutation } from "@tanstack/react-query";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { useCartStore } from "../cashier/stores";
 import { login, logout } from "./actions";
 import { ActionResponse } from "@/types";
 import { LoginSchema, LoginInput } from "./schemas";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 export function useLoginForm() {
   const router = useRouter();
@@ -46,12 +47,16 @@ export function useLoginForm() {
 
 export function useLogout() {
   const router = useRouter();
+  const queryClient = useQueryClient();
+  const resetCart = useCartStore((state) => state.clearCart);
 
   const { mutate, isPending } = useMutation({
     mutationFn: () => runAction(logout),
     onSuccess: (response) => {
       toast.add({ type: "success", description: response.message });
       router.replace("/login");
+      queryClient.clear();
+      resetCart();
     },
     onError: (response: ActionResponse) => {
       toast.add({ type: "error", description: response.message });
