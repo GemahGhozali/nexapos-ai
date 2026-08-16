@@ -36,7 +36,7 @@ export function useCashflowForm({ insertDataIntoActiveShift }: UseCashflowFormPa
     },
   });
 
-  const { mutateAsync, isPending } = useMutation({
+  const mutation = useMutation({
     mutationFn: (data: CashflowInput) =>
       runAction(() => {
         return insertDataIntoActiveShift ? createCashflowDataInActiveShift(data) : createCashflowData(data);
@@ -59,7 +59,7 @@ export function useCashflowForm({ insertDataIntoActiveShift }: UseCashflowFormPa
     },
   });
 
-  return { mutateAsync, form, isPending };
+  return { form, mutation };
 }
 
 export function useAllCashflows({ showDataFromActiveShiftOnly }: UseAllCashflowsParams) {
