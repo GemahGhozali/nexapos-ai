@@ -3,15 +3,18 @@
 import Link from "next/link";
 import { cn } from "@/libs/shadcn";
 import { format } from "date-fns";
+import { useState } from "react";
+import { Cashflow } from "../types";
 import { formatToIDR } from "@/utils/format-to-idr";
 import { usePathname } from "next/navigation";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { buttonVariants } from "@/components/ui/button";
 import { useAllCashflows } from "../hooks";
 import { CashflowTableEmpty } from "./cashflow-table-empty";
 import { CashflowTableError } from "./cashflow-table-error";
+import { CashflowDetailDialog } from "./cashflow-detail-dialog";
 import { CashflowTableSkeleton } from "./cashflow-table-skeleton";
-import { PlusSignIcon, TradeDownIcon, TradeUpIcon } from "@hugeicons/core-free-icons";
+import { Button, buttonVariants } from "@/components/ui/button";
+import { PlusSignIcon, TradeDownIcon, TradeUpIcon, ViewIcon } from "@hugeicons/core-free-icons";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -25,6 +28,8 @@ export function CashflowTable({ title, description, showDataFromActiveShiftOnly 
   const { data, isPending, isFetching, isError, error, refetch } = useAllCashflows({ showDataFromActiveShiftOnly });
 
   const currentPathName = usePathname();
+
+  const [selectedCashflowData, setSelectedCashflowData] = useState<Cashflow | undefined>(undefined);
 
   const renderTable = () => {
     if (isPending || isFetching) return <CashflowTableSkeleton />;
@@ -40,9 +45,8 @@ export function CashflowTable({ title, description, showDataFromActiveShiftOnly 
             <TableHead>Tipe Data</TableHead>
             <TableHead>Total Nominal</TableHead>
             <TableHead>Kategori</TableHead>
-            <TableHead>Metode Pembayaran</TableHead>
             <TableHead>Tanggal</TableHead>
-            <TableHead>Keterangan</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -67,9 +71,13 @@ export function CashflowTable({ title, description, showDataFromActiveShiftOnly 
                 {formatToIDR(cashflow.amount)}
               </TableCell>
               <TableCell>{cashflow.category}</TableCell>
-              <TableCell className="capitalize">{cashflow.paymentMethod === "cash" ? "Tunai" : "Transfer"}</TableCell>
               <TableCell>{format(cashflow.date, "dd/MM/yyyy")}</TableCell>
-              <TableCell className={cn(!cashflow.description && "italic")}>{cashflow.description || "Tidak ada keterangan"}</TableCell>
+              <TableCell className="space-x-2">
+                <Button variant="outline" size="sm" onClick={() => setSelectedCashflowData(cashflow)}>
+                  <HugeiconsIcon icon={ViewIcon} size={16} color="currentColor" strokeWidth={2} data-icon="inline-start" />
+                  Lihat Detail
+                </Button>
+              </TableCell>
             </TableRow>
           ))}
         </TableBody>
@@ -78,18 +86,21 @@ export function CashflowTable({ title, description, showDataFromActiveShiftOnly 
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>{title}</CardTitle>
-        <CardDescription>{description}</CardDescription>
-        <CardAction>
-          <Link href={`${currentPathName}/create`} className={buttonVariants({ variant: "default" })}>
-            Tambah Mutasi Kas
-            <HugeiconsIcon icon={PlusSignIcon} size={16} color="currentColor" strokeWidth={1.5} data-icon="inline-end" />
-          </Link>
-        </CardAction>
-      </CardHeader>
-      <CardContent>{renderTable()}</CardContent>
-    </Card>
+    <>
+      <Card>
+        <CardHeader>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
+          <CardAction>
+            <Link href={`${currentPathName}/create`} className={buttonVariants({ variant: "default" })}>
+              Tambah Mutasi Kas
+              <HugeiconsIcon icon={PlusSignIcon} size={16} color="currentColor" strokeWidth={1.5} data-icon="inline-end" />
+            </Link>
+          </CardAction>
+        </CardHeader>
+        <CardContent>{renderTable()}</CardContent>
+      </Card>
+      <CashflowDetailDialog cashflow={selectedCashflowData} onClose={() => setSelectedCashflowData(undefined)} />
+    </>
   );
 }
