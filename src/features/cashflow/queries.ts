@@ -11,7 +11,7 @@ export async function getAllCashflows() {
 
     const { data, error } = await supabase
       .from("cashflows")
-      .select("id, type, amount, category, paymentMethod: payment_method, date, description")
+      .select("id, type, amount, category, paymentMethod: payment_method, date, description, user: profiles(fullname)")
       .order("date", { ascending: false });
 
     if (error) {
@@ -19,7 +19,13 @@ export async function getAllCashflows() {
       return { data: null, error: "Gagal mendapatkan data arus kas!" };
     }
 
-    return { data, error: null };
+    return {
+      error: null,
+      data: data.map((cashflow) => {
+        const user = Array.isArray(cashflow.user) ? cashflow.user[0] : cashflow.user;
+        return { ...cashflow, user };
+      }),
+    };
   } catch (error) {
     console.log("❌ Get All Cashflows Error :", error);
     return { data: null, error: "Terjadi kesalahan pada server!" };
@@ -38,7 +44,7 @@ export async function getActiveShiftCashflows() {
 
     const { data, error } = await supabase
       .from("cashflows")
-      .select("id, type, amount, category, paymentMethod: payment_method, date, description")
+      .select("id, type, amount, category, paymentMethod: payment_method, date, description, user: profiles(fullname)")
       .eq("shift_id", shift.id)
       .order("date", { ascending: false });
 
@@ -47,7 +53,13 @@ export async function getActiveShiftCashflows() {
       return { data: null, error: "Gagal mendapatkan data arus kas shift!" };
     }
 
-    return { data, error: null };
+    return {
+      error: null,
+      data: data.map((cashflow) => {
+        const user = Array.isArray(cashflow.user) ? cashflow.user[0] : cashflow.user;
+        return { ...cashflow, user };
+      }),
+    };
   } catch (error) {
     if (isRedirectError(error)) throw error;
     console.log("❌ Get Shift Cashflows Error :", error);
