@@ -20,10 +20,7 @@ export function CashflowTableSkeleton() {
               <Skeleton className="h-9 w-full rounded-md" />
             </TableCell>
             <TableCell className="min-w-32">
-              <Skeleton className="h-9 w-full rounded-md" />
-            </TableCell>
-            <TableCell className="min-w-32">
-              <Skeleton className="h-9 w-full rounded-md" />
+              <Skeleton className="h-9 w-28 rounded-full" />
             </TableCell>
           </TableRow>
         ))}
