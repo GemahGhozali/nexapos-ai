@@ -81,7 +81,7 @@ export function CashflowDetailDialog({ cashflow, onClose }: DeleteProductDialogP
           </div>
           <div className="space-y-2 col-span-2">
             <p className="text-muted-foreground text-sm">Keterangan</p>
-            <p className={cn(!cashflow?.description && "italic")}>{cashflow?.description || "Tidak ada deskripsi"}</p>
+            <p className={cn(!cashflow?.description && "italic")}>{cashflow?.description || "Tidak ada keterangan"}</p>
           </div>
         </div>
       </DialogContent>
