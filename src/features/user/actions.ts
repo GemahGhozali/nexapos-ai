@@ -128,7 +128,6 @@ export async function updateUser(userId: string, data: UpdateUserInput) {
         fullname,
         role,
         profile_image: profileImageUrl,
-        updated_at: new Date().toISOString(),
       })
       .eq("id", userId);
 
