@@ -1,17 +1,19 @@
 import {
-  MenuSquareIcon,
-  UserMultiple03Icon,
-  PackageIcon,
   Tag01Icon,
+  PackageIcon,
   CashierIcon,
   RoboticIcon,
-  TransactionHistoryIcon,
-  Analytics01Icon,
   Money03Icon,
   Wallet01Icon,
+  Invoice04Icon,
+  MenuSquareIcon,
+  Analytics01Icon,
+  UserMultiple03Icon,
+  ClipboardClockIcon,
+  TransactionHistoryIcon,
 } from "@hugeicons/core-free-icons";
 
-export const operationalMenus = [
+export const shiftOperationalMenus = [
   {
     label: "Dashboard",
     segment: null,
@@ -25,10 +27,10 @@ export const operationalMenus = [
     icon: CashierIcon,
   },
   {
-    label: "Riwayat Transaksi",
-    segment: "transaction",
-    href: "/dashboard/transaction",
-    icon: TransactionHistoryIcon,
+    label: "Transaksi Shift",
+    segment: "shift-transaction",
+    href: "/dashboard/shift-transaction",
+    icon: Invoice04Icon,
   },
   {
     label: "Kas Operasional",
@@ -40,22 +42,37 @@ export const operationalMenus = [
 
 export const adminMenus = [
   {
-    label: "Laporan Laba Rugi",
+    label: "Laporan Keuangan",
     segment: "report",
     href: "/dashboard/report",
     icon: Analytics01Icon,
-  },
-  {
-    label: "Riwayat Mutasi Kas",
-    segment: "cashflow-mutation",
-    href: "/dashboard/cashflow-mutation",
-    icon: Money03Icon,
   },
   {
     label: "AI Business Copilot",
     segment: "copilot",
     href: "/dashboard/copilot",
     icon: RoboticIcon,
+  },
+];
+
+export const historyMenus = [
+  {
+    label: "Riwayat Shift",
+    segment: "shift",
+    href: "/dashboard/shift",
+    icon: ClipboardClockIcon,
+  },
+  {
+    label: "Riwayat Transaksi",
+    segment: "transaction",
+    href: "/dashboard/transaction",
+    icon: TransactionHistoryIcon,
+  },
+  {
+    label: "Riwayat Mutasi Kas",
+    segment: "cashflow-mutation",
+    href: "/dashboard/cashflow-mutation",
+    icon: Money03Icon,
   },
 ];
 
@@ -80,7 +97,7 @@ export const masterDataMenus = [
   },
 ];
 
-const allMenus = [...operationalMenus, ...adminMenus, ...masterDataMenus];
+const allMenus = [...shiftOperationalMenus, ...adminMenus, ...historyMenus, ...masterDataMenus];
 
 const mappedSegment: Record<string, string> = Object.fromEntries(
   allMenus.filter((menu) => menu.segment !== null).map((menu) => [menu.segment, menu.label]),
@@ -88,6 +105,6 @@ const mappedSegment: Record<string, string> = Object.fromEntries(
 
 export const segmentMapping: Record<string, string> = {
   ...mappedSegment,
-  create: "Tambah",
-  update: "Edit",
+  create: "Tambah Data",
+  update: "Edit Data",
 };

@@ -19,7 +19,7 @@ import { UserProfile } from "./user-profile";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { filterRouteGroupFromSegments } from "../utils";
-import { adminMenus, operationalMenus, masterDataMenus } from "../constants";
+import { adminMenus, shiftOperationalMenus, masterDataMenus, historyMenus } from "../constants";
 
 interface DashboardSidebarProps {
   user: User;
@@ -27,13 +27,18 @@ interface DashboardSidebarProps {
 
 const sidebarGroups = [
   {
-    title: "MENU OPERASIONAL",
-    items: operationalMenus,
+    title: "OPERASIONAL SHIFT",
+    items: shiftOperationalMenus,
   },
   {
     title: "MENU ADMIN",
     roles: "admin",
     items: adminMenus,
+  },
+  {
+    title: "DATA RIWAYAT",
+    roles: "admin",
+    items: historyMenus,
   },
   {
     title: "DATA MASTER",
@@ -55,13 +60,13 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
 
   return (
     <Sidebar className="*:bg-sidebar">
-      <SidebarHeader className="p-6">
+      <SidebarHeader className="p-6 border-b">
         <h1 className="font-semibold text-sm text-foreground">NexaPOS AI</h1>
         <p className="text-xs text-muted-foreground">AI Powered POS Application</p>
       </SidebarHeader>
-      <SidebarContent className="gap-3">
+      <SidebarContent className="gap-0">
         {filteredGroups.map((group) => (
-          <SidebarGroup key={group.title} className="p-3 pt-0">
+          <SidebarGroup key={group.title} className="p-3">
             <SidebarGroupLabel>{group.title}</SidebarGroupLabel>
             <SidebarMenu className="gap-3">
               {group.items.map((menu) => (
@@ -84,7 +89,7 @@ export function DashboardSidebar({ user }: DashboardSidebarProps) {
           </SidebarGroup>
         ))}
       </SidebarContent>
-      <SidebarFooter className="p-3">
+      <SidebarFooter className="p-3 border-t">
         <SidebarMenu>
           <SidebarMenuItem>
             <UserProfile user={user} />
