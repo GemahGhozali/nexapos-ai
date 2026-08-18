@@ -3,7 +3,6 @@
 import { format } from "date-fns";
 import { Button } from "@/components/ui/button";
 import { useState } from "react";
-import { CreditCardIcon, ViewIcon, Wallet01Icon } from "@hugeicons/core-free-icons";
 import { Transaction } from "../types";
 import { formatToIDR } from "@/utils/format-to-idr";
 import { HugeiconsIcon } from "@hugeicons/react";
@@ -12,11 +11,18 @@ import { TransactionTableEmpty } from "./transaction-table-empty";
 import { TransactionTableError } from "./transaction-table-error";
 import { TransactionDetailSheet } from "./transaction-detail-sheet";
 import { TransactionTableSkeleton } from "./transaction-table-skeleton";
+import { CreditCardIcon, ViewIcon, Wallet01Icon } from "@hugeicons/core-free-icons";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-export function TransactionTable() {
-  const { data, isPending, isFetching, isError, error, refetch } = useAllTransactions();
+interface TransactionTableProps {
+  title: string;
+  description: string;
+  showDataFromActiveShiftOnly: boolean;
+}
+
+export function TransactionTable({ title, description, showDataFromActiveShiftOnly }: TransactionTableProps) {
+  const { data, isPending, isFetching, isError, error, refetch } = useAllTransactions({ showDataFromActiveShiftOnly });
 
   const [selectedTransaction, setSelectedTransaction] = useState<Transaction | undefined>(undefined);
 
@@ -78,8 +84,8 @@ export function TransactionTable() {
     <>
       <Card>
         <CardHeader>
-          <CardTitle>Riwayat Transaksi</CardTitle>
-          <CardDescription>Pantau semua transaksi selama sesi operasional shift.</CardDescription>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
         </CardHeader>
         <CardContent>{renderTable()}</CardContent>
       </Card>
