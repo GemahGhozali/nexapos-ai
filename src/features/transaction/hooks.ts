@@ -1,10 +1,14 @@
 import { runQuery } from "@/utils/tanstack-runner";
 import { useQuery } from "@tanstack/react-query";
-import { getActiveShiftTransactions } from "./queries";
+import { getActiveShiftTransactions, getAllTransactions } from "./queries";
 
-export function useAllTransactions() {
+interface UseAllCashflowsParams {
+  showDataFromActiveShiftOnly: boolean;
+}
+
+export function useAllTransactions({ showDataFromActiveShiftOnly }: UseAllCashflowsParams) {
   return useQuery({
-    queryKey: ["transactions", "shift"],
-    queryFn: () => runQuery(getActiveShiftTransactions),
+    queryKey: showDataFromActiveShiftOnly ? ["transactions", "shift"] : ["transactions", "all"],
+    queryFn: () => runQuery(showDataFromActiveShiftOnly ? getActiveShiftTransactions : getAllTransactions),
   });
 }
