@@ -10,6 +10,7 @@ export type TransactionItem = {
 export type Transaction = {
   id: string;
   date: Date;
+  user: { fullname: string } | null;
   totalAmount: number;
   paymentMethod: "cash" | "transfer";
   paidAmount: number;
