@@ -30,8 +30,6 @@ export function CashflowForm({ insertDataIntoActiveShift }: CashflowFormProps) {
   const selectedType = watch("type");
   const currentCategories = CASHFLOW_CATEGORIES[selectedType];
 
-  console.log(selectedType, currentCategories);
-
   return (
     <Card className="w-full">
       <CardHeader>
