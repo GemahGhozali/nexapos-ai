@@ -14,7 +14,7 @@ import { CashflowTableError } from "./cashflow-table-error";
 import { CashflowDetailDialog } from "./cashflow-detail-dialog";
 import { CashflowTableSkeleton } from "./cashflow-table-skeleton";
 import { Button, buttonVariants } from "@/components/ui/button";
-import { PlusSignIcon, TradeDownIcon, TradeUpIcon, ViewIcon } from "@hugeicons/core-free-icons";
+import { CreditCardIcon, PlusSignIcon, TradeDownIcon, TradeUpIcon, ViewIcon, Wallet01Icon } from "@hugeicons/core-free-icons";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -45,6 +45,7 @@ export function CashflowTable({ title, description, showDataFromActiveShiftOnly 
             <TableHead>Tipe Data</TableHead>
             <TableHead>Total Nominal</TableHead>
             <TableHead>Kategori</TableHead>
+            <TableHead>Metode Pembayaran</TableHead>
             <TableHead>Tanggal</TableHead>
             <TableHead>Actions</TableHead>
           </TableRow>
@@ -71,6 +72,19 @@ export function CashflowTable({ title, description, showDataFromActiveShiftOnly 
                 {formatToIDR(cashflow.amount)}
               </TableCell>
               <TableCell>{cashflow.category}</TableCell>
+              <TableCell>
+                {cashflow.paymentMethod === "cash" ? (
+                  <p className="flex items-center gap-2">
+                    <HugeiconsIcon icon={Wallet01Icon} size={18} strokeWidth={1.5} />
+                    Tunai
+                  </p>
+                ) : (
+                  <p className="flex items-center gap-2">
+                    <HugeiconsIcon icon={CreditCardIcon} size={18} strokeWidth={1.5} />
+                    Transfer
+                  </p>
+                )}
+              </TableCell>
               <TableCell>{format(cashflow.date, "dd/MM/yyyy")}</TableCell>
               <TableCell className="space-x-2">
                 <Button variant="outline" size="sm" onClick={() => setSelectedCashflowData(cashflow)}>
