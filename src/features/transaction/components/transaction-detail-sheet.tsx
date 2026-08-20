@@ -36,12 +36,12 @@ export function TransactionDetailSheet({ transaction, onClose }: TransactionDeta
                 }
               />
             </SheetHeader>
-            <div className="p-4 space-y-4">
+            <div className="overflow-y-auto scrollbar-none p-4 space-y-4">
               {transaction.items.map((item) => (
                 <TransactionItem key={item.id} item={item} />
               ))}
             </div>
-            <SheetFooter>
+            <SheetFooter className="border-t">
               <TransactionSummary transaction={transaction} />
             </SheetFooter>
           </>
