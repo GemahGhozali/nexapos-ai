@@ -96,20 +96,18 @@ export async function getPaymentMethodProportion(shiftId: string): Promise<Payme
   try {
     const supabase = await createClient();
 
-    const { data, error } = await supabase.from("transactions").select("payment_method, total_amount").eq("shift_id", shiftId);
+    const { data, error } = await supabase.from("cashflows").select("payment_method, amount").eq("shift_id", shiftId).eq("type", "income");
 
     if (error) {
       console.log("❌ Get Payment Method Pie Data Error :", error);
       throw new Error("Gagal mengambil data proporsi pembayaran!");
     }
 
-    const totalCashRevenue = data
-      .filter((transaction) => transaction.payment_method === "cash")
-      .reduce((total, transaction) => total + transaction.total_amount, 0);
+    const totalCashRevenue = data.filter((cashflow) => cashflow.payment_method === "cash").reduce((total, cashflow) => total + cashflow.amount, 0);
 
     const totalTransferRevenue = data
-      .filter((transaction) => transaction.payment_method === "transfer")
-      .reduce((total, transaction) => total + transaction.total_amount, 0);
+      .filter((cashflow) => cashflow.payment_method === "transfer")
+      .reduce((total, cashflow) => total + cashflow.amount, 0);
 
     return [
       { paymentMethod: "tunai", totalRevenue: totalCashRevenue, fill: "var(--color-tunai)" },
