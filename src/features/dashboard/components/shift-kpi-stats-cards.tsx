@@ -34,7 +34,7 @@ export function ShiftKpiStatsCards({ data }: ShiftStatsCardsProps) {
           <div className="text-emerald-600 bg-primary/20 size-12 rounded-full grid place-content-center mb-4">
             <HugeiconsIcon icon={Analytics01Icon} size={24} color="currentColor" strokeWidth={1.5} />
           </div>
-          <CardDescription>Pendapatan Bersih Shift</CardDescription>
+          <CardDescription>Pemasukan Bersih Shift</CardDescription>
           <CardTitle className="text-2xl">{formatToIDR(data.totalNetIncome)}</CardTitle>
         </CardHeader>
       </Card>
