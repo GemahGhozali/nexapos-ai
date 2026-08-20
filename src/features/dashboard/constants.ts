@@ -4,13 +4,13 @@ import {
   CashierIcon,
   RoboticIcon,
   Money03Icon,
-  Wallet01Icon,
   Invoice04Icon,
   MenuSquareIcon,
   Analytics01Icon,
   UserMultiple03Icon,
   ClipboardClockIcon,
   TransactionHistoryIcon,
+  ReverseWithdrawal01Icon,
 } from "@hugeicons/core-free-icons";
 
 export const shiftOperationalMenus = [
@@ -33,10 +33,10 @@ export const shiftOperationalMenus = [
     icon: Invoice04Icon,
   },
   {
-    label: "Kas Operasional",
-    segment: "operational-cashflow",
-    href: "/dashboard/operational-cashflow",
-    icon: Wallet01Icon,
+    label: "Pengeluaran Shift",
+    segment: "expense",
+    href: "/dashboard/expense",
+    icon: ReverseWithdrawal01Icon,
   },
 ];
 
@@ -69,9 +69,9 @@ export const historyMenus = [
     icon: TransactionHistoryIcon,
   },
   {
-    label: "Riwayat Mutasi Kas",
-    segment: "cashflow-mutation",
-    href: "/dashboard/cashflow-mutation",
+    label: "Riwayat Arus Kas",
+    segment: "cashflow",
+    href: "/dashboard/cashflow",
     icon: Money03Icon,
   },
 ];
