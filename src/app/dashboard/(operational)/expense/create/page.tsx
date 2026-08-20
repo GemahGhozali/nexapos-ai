@@ -1,5 +1,5 @@
-import { CashflowForm } from "@/features/cashflow/components/cashflow-form";
+import { ExpenseForm } from "@/features/expense/components/expense-form";
 
 export default function CreateOperationalCashflowPage() {
-  return <CashflowForm insertDataIntoActiveShift={true} />;
+  return <ExpenseForm />;
 }
