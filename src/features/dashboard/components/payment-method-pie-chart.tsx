@@ -52,8 +52,9 @@ export function PaymentMethodPieChart({ data }: PaymentMethodPieChartProps) {
                 hideLabel
                 formatter={(value, name, item) => (
                   <div className="flex flex-col gap-1">
-                    <span className="text-muted-foreground capitalize">Omzet {item.payload.paymentMethod}</span>
-                    <span className="font-medium">{formatToIDR(Number(value))}</span>
+                    <span className="capitalize">Omzet {item.payload.paymentMethod}</span>
+                    <span className="font-medium text-emerald-600">{formatToIDR(Number(value))}</span>
+                    <span className="text-xs text-muted-foreground">{item.payload.totalTransactions} Total Transaksi</span>
                   </div>
                 )}
               />

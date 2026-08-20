@@ -6,7 +6,7 @@ import { createClient } from "@/libs/supabase/server";
 export interface KpiStats {
   totalIncome: number;
   totalExpense: number;
-  totalRevenue: number;
+  totalNetIncome: number;
   totalTransactions: number;
 }
 
@@ -20,6 +20,7 @@ export interface CashDrawerDetails {
 export interface PaymentMethodProportionItem {
   paymentMethod: "tunai" | "transfer";
   totalRevenue: number;
+  totalTransactions: number;
   fill: string;
 }
 
@@ -33,25 +34,21 @@ export async function getKpiStats(shiftId: string): Promise<KpiStats> {
   try {
     const supabase = await createClient();
 
-    const [transactions, cashflows] = await Promise.all([
-      supabase.from("transactions").select("total_amount").eq("shift_id", shiftId),
-      supabase.from("cashflows").select("type, amount").eq("shift_id", shiftId),
-    ]);
+    const { data, error } = await supabase.from("cashflows").select("type, amount").eq("shift_id", shiftId);
 
-    if (transactions.error || cashflows.error) {
-      console.log("❌ Get KPI Stats Error :", { transactionsError: transactions.error, cashflowsError: cashflows.error });
+    if (error) {
+      console.log("❌ Get KPI Stats Error :", error);
       throw new Error("Gagal mengambil data indikator kinerja (KPI)!");
     }
 
-    const totalRevenue = transactions.data.reduce((total, transaction) => total + transaction.total_amount, 0);
+    const incomeData = data.filter((cashflow) => cashflow.type === "income");
 
-    const totalTransactions = transactions.data.length;
+    const totalTransactions = incomeData.length;
+    const totalIncome = incomeData.reduce((total, cashflow) => total + cashflow.amount, 0);
+    const totalExpense = data.filter((cashflow) => cashflow.type === "expense").reduce((total, cashflow) => total + cashflow.amount, 0);
+    const totalNetIncome = totalIncome - totalExpense;
 
-    const totalIncome = cashflows.data.filter((cashflow) => cashflow.type === "income").reduce((total, cashflow) => total + cashflow.amount, 0);
-
-    const totalExpense = cashflows.data.filter((cashflow) => cashflow.type === "expense").reduce((total, cashflow) => total + cashflow.amount, 0);
-
-    return { totalIncome, totalExpense, totalRevenue, totalTransactions };
+    return { totalIncome, totalExpense, totalNetIncome, totalTransactions };
   } catch (error) {
     console.log("❌ Get KPI Stats Error :", error);
     if (error instanceof Error) throw error;
@@ -103,15 +100,25 @@ export async function getPaymentMethodProportion(shiftId: string): Promise<Payme
       throw new Error("Gagal mengambil data proporsi pembayaran!");
     }
 
-    const totalCashRevenue = data.filter((cashflow) => cashflow.payment_method === "cash").reduce((total, cashflow) => total + cashflow.amount, 0);
+    const cashData = data.filter((cashflow) => cashflow.payment_method === "cash");
+    const totalCashRevenue = cashData.reduce((total, cashflow) => total + cashflow.amount, 0);
 
-    const totalTransferRevenue = data
-      .filter((cashflow) => cashflow.payment_method === "transfer")
-      .reduce((total, cashflow) => total + cashflow.amount, 0);
+    const transferData = data.filter((cashflow) => cashflow.payment_method === "transfer");
+    const totalTransferRevenue = transferData.reduce((total, cashflow) => total + cashflow.amount, 0);
 
     return [
-      { paymentMethod: "tunai", totalRevenue: totalCashRevenue, fill: "var(--color-tunai)" },
-      { paymentMethod: "transfer", totalRevenue: totalTransferRevenue, fill: "var(--color-transfer)" },
+      {
+        paymentMethod: "tunai",
+        totalRevenue: totalCashRevenue,
+        totalTransactions: cashData.length,
+        fill: "var(--color-tunai)",
+      },
+      {
+        paymentMethod: "transfer",
+        totalRevenue: totalTransferRevenue,
+        totalTransactions: transferData.length,
+        fill: "var(--color-transfer)",
+      },
     ];
   } catch (error) {
     console.log("❌ Get Payment Method Pie Data Error :", error);
