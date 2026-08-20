@@ -2,7 +2,7 @@ import { KpiStats } from "../queries";
 import { formatToIDR } from "@/utils/format-to-idr";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { Card, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Analytics01Icon, ShoppingCart01Icon, TradeDownIcon, TradeUpIcon } from "@hugeicons/core-free-icons";
+import { CashierIcon, ShoppingCart01Icon, TradeDownIcon, TradeUpIcon } from "@hugeicons/core-free-icons";
 
 interface ShiftStatsCardsProps {
   data: KpiStats;
@@ -16,7 +16,7 @@ export function ShiftKpiStatsCards({ data }: ShiftStatsCardsProps) {
           <div className="text-emerald-600 bg-primary/20 size-12 rounded-full grid place-content-center mb-4">
             <HugeiconsIcon icon={TradeUpIcon} size={24} color="currentColor" strokeWidth={1.5} />
           </div>
-          <CardDescription>Total Pemasukan</CardDescription>
+          <CardDescription>Total Omzet Keseluruhan</CardDescription>
           <CardTitle className="text-2xl">{formatToIDR(data.totalIncome)}</CardTitle>
         </CardHeader>
       </Card>
@@ -32,9 +32,9 @@ export function ShiftKpiStatsCards({ data }: ShiftStatsCardsProps) {
       <Card>
         <CardHeader>
           <div className="text-emerald-600 bg-primary/20 size-12 rounded-full grid place-content-center mb-4">
-            <HugeiconsIcon icon={Analytics01Icon} size={24} color="currentColor" strokeWidth={1.5} />
+            <HugeiconsIcon icon={CashierIcon} size={24} color="currentColor" strokeWidth={1.5} />
           </div>
-          <CardDescription>Total Omzet Kasir</CardDescription>
+          <CardDescription>Total Omzet Transaksi Kasir</CardDescription>
           <CardTitle className="text-2xl">{formatToIDR(data.totalRevenue)}</CardTitle>
         </CardHeader>
       </Card>
