@@ -1,7 +1,7 @@
 import { Skeleton } from "@/components/ui/skeleton";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-export default function DashboardLoadingPage() {
+export function ShiftOverviewSkeleton() {
   return (
     <div className="space-y-6">
       <div className="w-full flex justify-between items-end gap-6">
