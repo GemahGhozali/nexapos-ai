@@ -1,7 +1,7 @@
 "use server";
 
-import { ENVIRONMENT } from "@/config/env";
 import { createClient } from "@/libs/supabase/server";
+import { getProductImageURL } from "./utils";
 
 export async function getAllProducts() {
   try {
@@ -18,7 +18,7 @@ export async function getAllProducts() {
       error: null,
       data: data.map((product) => {
         const category = Array.isArray(product.category) ? product.category[0] : product.category;
-        const image = product.image ? `${ENVIRONMENT.SUPABASE_STORAGE_URL}/images/${product.image}` : null;
+        const image = getProductImageURL(product.image);
         return { ...product, category, image };
       }),
     };
@@ -44,7 +44,7 @@ export async function getProductById(productId: string) {
     }
 
     const category = Array.isArray(data.category) ? data.category[0] : data.category;
-    const image = data.image ? `${ENVIRONMENT.SUPABASE_STORAGE_URL}/images/${data.image}` : null;
+    const image = getProductImageURL(data.image);
 
     return { error: null, data: { ...data, category, image } };
   } catch (error) {

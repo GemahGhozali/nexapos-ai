@@ -1,3 +1,4 @@
+import { ENVIRONMENT } from "@/config/env";
 import { SupabaseClient } from "@supabase/supabase-js";
 import { deleteFilesFromStorage, uploadFileToStorage } from "@/utils/supabase-storage";
 
@@ -44,4 +45,9 @@ export async function handleProductImageUpdate({ supabase, productImage, current
   }
 
   return { success: true, imageURL, message: "Gambar produk berhasil diperbarui!" };
+}
+
+export function getProductImageURL(image: string | null) {
+  if (!image) return null;
+  return `${ENVIRONMENT.SUPABASE_STORAGE_URL}/images/${image}`;
 }
