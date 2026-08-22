@@ -11,11 +11,10 @@ export const EXPENSE_CATEGORIES = [
 ];
 
 export const ExpenseSchema = z.object({
-  date: z.date("Tanggal wajib diisi!"),
   amount: z.coerce.number<number>("Total nominal wajib diisi!").positive("Total nominal tidak boleh 0!"),
   category: z.enum(EXPENSE_CATEGORIES, "Kategori wajib diisi!"),
   paymentMethod: z.enum(["cash", "transfer"], "Metode pembayaran harus 'tunai' atau 'transfer'!"),
-  description: z.string(),
+  description: z.string().min(1, "Keterangan wajib diisi!"),
 });
 
 export type ExpenseInput = z.infer<typeof ExpenseSchema>;

@@ -19,7 +19,6 @@ export function useExpenseForm() {
     resolver: zodResolver(ExpenseSchema),
     mode: "onTouched",
     defaultValues: {
-      date: new Date(),
       amount: 0,
       category: "",
       paymentMethod: "cash",
