@@ -1,20 +1,25 @@
 "use client";
 
-import Link from "next/link";
 import { format } from "date-fns";
+import { AIWizard } from "@/features/ai/wizard/components/ai-wizard";
+import { useState } from "react";
 import { formatToIDR } from "@/utils/format-to-idr";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { buttonVariants } from "@/components/ui/button";
-import { useAllExpenses } from "../hooks";
 import { ExpenseTableEmpty } from "./expense-table-empty";
 import { ExpenseTableError } from "./expense-table-error";
+import { ExpenseFormDialog } from "./expense-form-dialog";
 import { ExpenseTableSkeleton } from "./expense-table-skeleton";
-import { CreditCardIcon, PlusSignIcon, Wallet01Icon } from "@hugeicons/core-free-icons";
+import { CreditCardIcon, Wallet01Icon } from "@hugeicons/core-free-icons";
+import { useAllExpenses, useExpenseForm } from "../hooks";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
 export function ExpenseTable() {
+  const { form, mutation } = useExpenseForm();
+
   const { data, isPending, isFetching, isError, error, refetch } = useAllExpenses();
+
+  const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
   const renderTable = () => {
     if (isPending || isFetching) return <ExpenseTableSkeleton />;
@@ -62,18 +67,32 @@ export function ExpenseTable() {
   };
 
   return (
-    <Card>
-      <CardHeader>
-        <CardTitle>Pengeluaran Shift</CardTitle>
-        <CardDescription>Riwayat pengeluaran selama sesi shift berlangsung.</CardDescription>
-        <CardAction>
-          <Link href="expense/create" className={buttonVariants({ variant: "default" })}>
-            Tambah Pengeluaran
-            <HugeiconsIcon icon={PlusSignIcon} size={16} color="currentColor" strokeWidth={1.5} data-icon="inline-end" />
-          </Link>
-        </CardAction>
-      </CardHeader>
-      <CardContent>{renderTable()}</CardContent>
-    </Card>
+    <div className="space-y-6">
+      <AIWizard
+        placeholders={[
+          "Belanja kebutuhan dapur 50 ribu pakai uang kas...",
+          "Bayar ongkir kurir 10 ribu pakai E-Wallet...",
+          "Re-stock bahan baku 25 ribu pakai QRIS...",
+        ]}
+        allowedTools={["create_expense"]}
+        onGetResult={(response) => {
+          if (response.data.action.name === "create_expense") {
+            const expense = response.data.action.payload;
+            setDialogOpen(true);
+            form.setValues(expense);
+          }
+        }}
+      />
+      <Card>
+        <CardHeader>
+          <CardTitle>Pengeluaran Shift</CardTitle>
+          <CardDescription>Riwayat pengeluaran selama sesi shift berlangsung.</CardDescription>
+          <CardAction>
+            <ExpenseFormDialog form={form} mutation={mutation} open={dialogOpen} setOpen={setDialogOpen} />
+          </CardAction>
+        </CardHeader>
+        <CardContent>{renderTable()}</CardContent>
+      </Card>
+    </div>
   );
 }
