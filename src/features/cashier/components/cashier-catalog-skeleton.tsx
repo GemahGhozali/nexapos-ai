@@ -4,10 +4,11 @@ import { Card, CardDescription, CardFooter, CardHeader, CardTitle } from "@/comp
 export function CashierCatalogSkeleton() {
   return (
     <div className="space-y-6">
+      <Skeleton className="w-full h-14 rounded-full" />
       <div className="overflow-x-auto scrollbar-none">
         <div className="flex gap-3">
           {Array.from({ length: 6 }).map((_, i) => (
-            <Skeleton key={i} className="h-8 w-32 rounded-full" />
+            <Skeleton key={i} className="h-9 w-32 rounded-full" />
           ))}
         </div>
       </div>
