@@ -1,31 +1,27 @@
 import { create } from "zustand";
-import { Product } from "../product/types";
 import { CartItem } from "./types";
 
 interface CartState {
   cart: CartItem[];
-  addToCart: (menu: Product) => void;
+  addToCart: (newItem: CartItem) => void;
   updateQuantity: (id: string, quantity: number) => void;
   clearCart: () => void;
 }
 
-export const useCartStore = create<CartState>()((set) => ({
+export const useCartStore = create<CartState>()((set, get) => ({
   cart: [],
 
-  addToCart: (menu) =>
-    set((state) => {
-      const itemExist = state.cart.find((item) => item.id === menu.id);
+  addToCart: (newItem) => {
+    const { cart, updateQuantity } = get();
+    const existingItem = cart.find((item) => item.id === newItem.id);
 
-      if (itemExist) {
-        return {
-          cart: state.cart.map((item) => (item.id === menu.id ? { ...item, quantity: item.quantity + 1 } : item)),
-        };
-      }
+    if (existingItem) {
+      updateQuantity(existingItem.id, existingItem.quantity + newItem.quantity);
+      return;
+    }
 
-      const newItem: CartItem = { id: menu.id, name: menu.name, price: menu.price, quantity: 1, image: menu.image };
-
-      return { cart: [...state.cart, newItem] };
-    }),
+    set({ cart: [...cart, newItem] });
+  },
 
   updateQuantity: (id, quantity) =>
     set((state) => {
