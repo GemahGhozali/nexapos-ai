@@ -16,11 +16,12 @@ interface ProductCardProps {
 export function ProductCard({ product }: ProductCardProps) {
   const item = useCartStore((state) => state.cart.find((cartItem) => cartItem.id === product.id));
   const addToCart = useCartStore((state) => state.addToCart);
+  const handleAddToCart = () => addToCart({ id: product.id, name: product.name, price: product.price, image: product.image, quantity: 1 });
 
   const renderButton = () => {
     if (!item) {
       return (
-        <Button className="w-full" size="lg" onClick={() => addToCart(product)}>
+        <Button className="w-full" size="lg" onClick={handleAddToCart}>
           Tambah Produk
           <HugeiconsIcon icon={PlusSignIcon} size={16} strokeWidth={1.5} color="currentColor" data-icon="inline-end" />
         </Button>
