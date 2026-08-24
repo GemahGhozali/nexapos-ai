@@ -4,7 +4,7 @@ import { Spinner } from "@/components/ui/spinner";
 import { useState } from "react";
 import { WizardInput } from "../schemas";
 import { HugeiconsIcon } from "@hugeicons/react";
-import { transcribeAudio } from "../actions";
+import { transcribeAudio } from "../../actions";
 import { useAudioRecorder } from "@/hooks/use-audio-recorder";
 import { Mic02Icon, SquareIcon } from "@hugeicons/core-free-icons";
 
