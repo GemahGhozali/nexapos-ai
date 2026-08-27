@@ -1,11 +1,16 @@
 "use client";
 
+import { cn } from "@/libs/shadcn";
+import { toast } from "@/components/ui/toast";
 import { Spinner } from "@/components/ui/spinner";
+import { useState } from "react";
 import { HugeiconsIcon } from "@hugeicons/react";
+import { transcribeAudio } from "../../actions";
+import { useAudioRecorder } from "@/hooks/use-audio-recorder";
 import { UseMutationResult } from "@tanstack/react-query";
 import { Controller, UseFormReturn } from "react-hook-form";
 import { ChatFormInput, ChatHistory } from "../schemas";
-import { ArrowUp02Icon, Mic02Icon } from "@hugeicons/core-free-icons";
+import { ArrowUp02Icon, Mic02Icon, SquareIcon } from "@hugeicons/core-free-icons";
 import { InputGroup, InputGroupAddon, InputGroupButton, InputGroupTextarea } from "@/components/ui/input-group";
 
 interface ChatInputProps {
@@ -21,6 +26,47 @@ export function ChatInput({ mutation, form, messages, setMessages }: ChatInputPr
     setMessages(messageHistory);
     mutation.mutate(messageHistory);
   });
+
+  const { isRecording, startRecording, stopRecording } = useAudioRecorder();
+
+  const [isTranscribing, setIsTranscribing] = useState<boolean>(false);
+
+  const handleMicClick = async () => {
+    if (!isRecording) {
+      try {
+        await startRecording();
+      } catch (error) {
+        if (error instanceof Error) {
+          toast.add({ type: "error", description: error.message });
+        }
+      }
+
+      return;
+    }
+
+    const audioBlob = await stopRecording();
+
+    if (!audioBlob) return;
+
+    setIsTranscribing(true);
+
+    const formData = new FormData();
+    formData.append("file", audioBlob, "voice-command.webm");
+
+    const response = await transcribeAudio(formData);
+
+    if (!response.success || !response.data) {
+      return toast.add({ type: "error", description: response.message });
+    }
+
+    const messageHistory: ChatHistory = [...messages, { role: "user", content: response.data }];
+    setMessages(messageHistory);
+    mutation.mutate(messageHistory);
+
+    setIsTranscribing(false);
+  };
+
+  const isBusy = mutation.isPending || isTranscribing;
 
   return (
     <form onSubmit={onSubmit} className="w-full">
@@ -49,10 +95,22 @@ export function ChatInput({ mutation, form, messages, setMessages }: ChatInputPr
           )}
         />
         <InputGroupAddon align="block-end">
-          <InputGroupButton variant="outline" size="icon-sm" className="ml-auto" disabled={mutation.isPending}>
-            <HugeiconsIcon icon={Mic02Icon} size={12} color="currentColor" strokeWidth={1.75} />
+          <InputGroupButton
+            size="icon-sm"
+            disabled={isBusy}
+            variant={isRecording ? "destructive" : "outline"}
+            onClick={handleMicClick}
+            className={cn("ml-auto", isRecording && "animate-pulse")}
+          >
+            {isTranscribing ? (
+              <Spinner />
+            ) : isRecording ? (
+              <HugeiconsIcon icon={SquareIcon} size={12} color="currentColor" strokeWidth={1.5} />
+            ) : (
+              <HugeiconsIcon icon={Mic02Icon} size={12} color="currentColor" strokeWidth={1.75} />
+            )}
           </InputGroupButton>
-          <InputGroupButton variant="default" size="icon-sm" type="submit" disabled={!form.formState.isValid || mutation.isPending}>
+          <InputGroupButton variant="default" size="icon-sm" type="submit" disabled={!form.formState.isValid || isBusy}>
             {mutation.isPending ? <Spinner /> : <HugeiconsIcon icon={ArrowUp02Icon} size={8} color="currentColor" strokeWidth={1.75} />}
           </InputGroupButton>
         </InputGroupAddon>
