@@ -2,7 +2,6 @@ import {
   Tag01Icon,
   PackageIcon,
   CashierIcon,
-  RoboticIcon,
   Money03Icon,
   Invoice04Icon,
   MenuSquareIcon,
@@ -34,8 +33,8 @@ export const shiftOperationalMenus = [
   },
   {
     label: "Pengeluaran Shift",
-    segment: "expense",
-    href: "/dashboard/expense",
+    segment: "shift-expense",
+    href: "/dashboard/shift-expense",
     icon: ReverseWithdrawal01Icon,
   },
 ];
@@ -43,36 +42,27 @@ export const shiftOperationalMenus = [
 export const adminMenus = [
   {
     label: "Laporan Keuangan",
-    segment: "report",
-    href: "/dashboard/report",
+    segment: "financial-report",
+    href: "/dashboard/financial-report",
     icon: Analytics01Icon,
   },
   {
-    label: "AI Business Copilot",
-    segment: "copilot",
-    href: "/dashboard/copilot",
-    icon: RoboticIcon,
-  },
-];
-
-export const historyMenus = [
-  {
-    label: "Riwayat Shift",
-    segment: "shift",
-    href: "/dashboard/shift",
-    icon: ClipboardClockIcon,
-  },
-  {
     label: "Riwayat Transaksi",
-    segment: "transaction",
-    href: "/dashboard/transaction",
+    segment: "transaction-history",
+    href: "/dashboard/transaction-history",
     icon: TransactionHistoryIcon,
   },
   {
-    label: "Riwayat Arus Kas",
-    segment: "cashflow",
-    href: "/dashboard/cashflow",
+    label: "Riwayat Pengeluaran",
+    segment: "expense-history",
+    href: "/dashboard/expense-history",
     icon: Money03Icon,
+  },
+  {
+    label: "Riwayat Operasional Shift",
+    segment: "shift-operational-history",
+    href: "/dashboard/shift-operational-history",
+    icon: ClipboardClockIcon,
   },
 ];
 
@@ -97,7 +87,7 @@ export const masterDataMenus = [
   },
 ];
 
-const allMenus = [...shiftOperationalMenus, ...adminMenus, ...historyMenus, ...masterDataMenus];
+const allMenus = [...shiftOperationalMenus, ...adminMenus, ...masterDataMenus];
 
 const mappedSegment: Record<string, string> = Object.fromEntries(
   allMenus.filter((menu) => menu.segment !== null).map((menu) => [menu.segment, menu.label]),
@@ -108,3 +98,20 @@ export const segmentMapping: Record<string, string> = {
   create: "Tambah Data",
   update: "Edit Data",
 };
+
+export const sidebarGroups = [
+  {
+    title: "OPERASIONAL SHIFT",
+    items: shiftOperationalMenus,
+  },
+  {
+    title: "REKAP KEUANGAN",
+    roles: "admin",
+    items: adminMenus,
+  },
+  {
+    title: "DATA MASTER",
+    roles: "admin",
+    items: masterDataMenus,
+  },
+];

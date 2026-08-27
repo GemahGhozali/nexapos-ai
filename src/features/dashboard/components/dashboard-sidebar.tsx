@@ -16,36 +16,14 @@ import Link from "next/link";
 import { cn } from "@/libs/shadcn";
 import { User } from "@/features/user/types";
 import { UserProfile } from "./user-profile";
+import { sidebarGroups } from "../constants";
 import { HugeiconsIcon } from "@hugeicons/react";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { filterRouteGroupFromSegments } from "../utils";
-import { adminMenus, shiftOperationalMenus, masterDataMenus, historyMenus } from "../constants";
 
 interface DashboardSidebarProps {
   user: User;
 }
-
-const sidebarGroups = [
-  {
-    title: "OPERASIONAL SHIFT",
-    items: shiftOperationalMenus,
-  },
-  {
-    title: "MENU ADMIN",
-    roles: "admin",
-    items: adminMenus,
-  },
-  {
-    title: "DATA RIWAYAT",
-    roles: "admin",
-    items: historyMenus,
-  },
-  {
-    title: "DATA MASTER",
-    roles: "admin",
-    items: masterDataMenus,
-  },
-];
 
 export function DashboardSidebar({ user }: DashboardSidebarProps) {
   const rawSegments = useSelectedLayoutSegments();
