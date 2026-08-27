@@ -39,7 +39,7 @@ export async function processCopilotChat(data: ChatHistory) {
               - Do NOT give abstract corporate jargon or overly complex business theories. Keep all advice pragmatic and immediately usable.
 
               [Response Format]
-              - ALWAYS use MARKDOWN format, but ONLY use natural text paragraphs, bold text for key metrics/emphasis, italic text for subtle cues or notes, horizontal dividers (---) for topic/section separator, line breaks for paragraphs spacer, and bulleted or numbered lists
+              - STRICTLY IMPORTANT: ALWAYS use MARKDOWN format, but ONLY use natural text paragraphs, bold text for key metrics/emphasis, italic text for subtle cues or notes, horizontal dividers (---) for topic/section separator, line breaks for paragraphs spacer, and bulleted or numbered lists
               - Select the appropriate formatting structure adaptively:
                 * Begin with a warm, concise text paragraph addressing the user's core question.
                 * Use text paragraphs for continuous explanations, simple concepts, or brief advice.
@@ -91,7 +91,7 @@ export async function processCopilotChat(data: ChatHistory) {
             - Avoid technical database jargon (such as 'null', 'JSON', 'query', etc). Always use simple, accessible business language suitable for UMKM owners.
 
             [Response Format]
-            - ALWAYS use MARKDOWN format, but ONLY use natural text paragraphs, bold text for key metrics/emphasis, italic text for subtle cues or notes, horizontal dividers (---) for topic/section separator, line breaks for paragraphs spacer, and bulleted or numbered lists
+            - STRICTLY IMPORTANT: ALWAYS use MARKDOWN format, but ONLY use natural text paragraphs, bold text for key metrics/emphasis, italic text for subtle cues or notes, horizontal dividers (---) for topic/section separator, line breaks for paragraphs spacer, and bulleted or numbered lists
             - Structure your output based on the content being presented:
               * Start with a short text paragraph to deliver the main answer or summary directly.
               * Use text paragraphs for simple direct answers, single-metric responses, or general insights.
