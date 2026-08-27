@@ -44,6 +44,7 @@ export function ExpenseTable({ title, description, insertDataIntoActiveShift, sh
             <TableHead>Kategori</TableHead>
             <TableHead>Metode Pembayaran</TableHead>
             <TableHead>Deskripsi</TableHead>
+            {!showDataFromActiveShiftOnly && <TableHead>Penanggung Jawab</TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -66,6 +67,7 @@ export function ExpenseTable({ title, description, insertDataIntoActiveShift, sh
                 )}
               </TableCell>
               <TableCell>{cashflow.description}</TableCell>
+              {!showDataFromActiveShiftOnly && <TableCell>{cashflow.user.fullname}</TableCell>}
             </TableRow>
           ))}
         </TableBody>
