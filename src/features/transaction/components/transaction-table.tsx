@@ -51,7 +51,7 @@ export function TransactionTable({ title, description, showDataFromActiveShiftOn
             return (
               <TableRow key={transaction.id}>
                 <TableCell>{format(transaction.date, "dd/MM/yyyy")}</TableCell>
-                <TableCell>{formatToIDR(transaction.totalAmount)}</TableCell>
+                <TableCell className="font-medium text-green-600">+ {formatToIDR(transaction.totalAmount)}</TableCell>
                 <TableCell>
                   {transaction.paymentMethod === "cash" ? (
                     <p className="flex items-center gap-2">
