@@ -4,14 +4,22 @@ import { toast } from "@/components/ui/toast";
 import { useForm } from "react-hook-form";
 import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { createExpense } from "./actions";
-import { getAllExpenses } from "./queries";
 import { ActionResponse } from "@/types";
 import { runAction, runQuery } from "@/utils/tanstack-runner";
 import { ExpenseSchema, ExpenseInput } from "./schemas";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { getActiveShiftExpenses, getAllExpenses } from "./queries";
+import { createExpense, createExpenseInActiveShift } from "./actions";
 
-export function useExpenseForm() {
+interface UseExpenseFormParams {
+  insertDataIntoActiveShift: boolean;
+}
+
+interface UseAllExpensesParams {
+  showDataFromActiveShiftOnly: boolean;
+}
+
+export function useExpenseForm({ insertDataIntoActiveShift }: UseExpenseFormParams) {
   const router = useRouter();
   const queryClient = useQueryClient();
 
@@ -27,7 +35,10 @@ export function useExpenseForm() {
   });
 
   const mutation = useMutation({
-    mutationFn: (data: ExpenseInput) => runAction(() => createExpense(data)),
+    mutationFn: (data: ExpenseInput) =>
+      runAction(() => {
+        return insertDataIntoActiveShift ? createExpenseInActiveShift(data) : createExpense(data);
+      }),
 
     onSuccess: (response: ActionResponse) => {
       toast.add({ type: "success", description: response.message });
@@ -49,9 +60,9 @@ export function useExpenseForm() {
   return { form, mutation };
 }
 
-export function useAllExpenses() {
+export function useAllExpenses({ showDataFromActiveShiftOnly }: UseAllExpensesParams) {
   return useQuery({
-    queryKey: ["expenses"],
-    queryFn: () => runQuery(getAllExpenses),
+    queryKey: showDataFromActiveShiftOnly ? ["expenses", "shift"] : ["expenses", "all"],
+    queryFn: () => runQuery(showDataFromActiveShiftOnly ? getActiveShiftExpenses : getAllExpenses),
   });
 }

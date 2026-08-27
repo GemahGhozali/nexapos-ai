@@ -14,10 +14,17 @@ import { useAllExpenses, useExpenseForm } from "../hooks";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardAction, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 
-export function ExpenseTable() {
-  const { form, mutation } = useExpenseForm();
+interface ExpenseTableProps {
+  title: string;
+  description: string;
+  insertDataIntoActiveShift: boolean;
+  showDataFromActiveShiftOnly: boolean;
+}
 
-  const { data, isPending, isFetching, isError, error, refetch } = useAllExpenses();
+export function ExpenseTable({ title, description, insertDataIntoActiveShift, showDataFromActiveShiftOnly }: ExpenseTableProps) {
+  const { form, mutation } = useExpenseForm({ insertDataIntoActiveShift });
+
+  const { data, isPending, isFetching, isError, error, refetch } = useAllExpenses({ showDataFromActiveShiftOnly });
 
   const [dialogOpen, setDialogOpen] = useState<boolean>(false);
 
@@ -85,8 +92,8 @@ export function ExpenseTable() {
       />
       <Card>
         <CardHeader>
-          <CardTitle>Pengeluaran Shift</CardTitle>
-          <CardDescription>Riwayat pengeluaran selama sesi shift berlangsung.</CardDescription>
+          <CardTitle>{title}</CardTitle>
+          <CardDescription>{description}</CardDescription>
           <CardAction>
             <ExpenseFormDialog form={form} mutation={mutation} open={dialogOpen} setOpen={setDialogOpen} />
           </CardAction>

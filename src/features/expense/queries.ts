@@ -5,7 +5,7 @@ import { createClient } from "@/libs/supabase/server";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { getCurrentUserAndActiveShift } from "../shift/queries";
 
-export async function getAllExpenses() {
+export async function getActiveShiftExpenses() {
   try {
     const supabase = await createClient();
 
@@ -16,15 +16,36 @@ export async function getAllExpenses() {
     if (!shift) return { data: null, error: "Shift belum dibuka! Silahkan buka shift terlebih dahulu." };
 
     const { data, error } = await supabase
-      .from("cashflows")
+      .from("expenses")
       .select("id, date, amount, category, paymentMethod: payment_method, description")
       .eq("shift_id", shift.id)
-      .eq("type", "expense")
       .order("date", { ascending: false });
 
     if (error) {
       console.log("❌ Get Shift Cashflows Error :", error);
-      return { data: null, error: "Gagal mendapatkan data arus kas shift!" };
+      return { data: null, error: "Gagal mendapatkan data pengeluaran shift!" };
+    }
+
+    return { error: null, data };
+  } catch (error) {
+    if (isRedirectError(error)) throw error;
+    console.log("❌ Get Shift Cashflows Error :", error);
+    return { data: null, error: "Terjadi kesalahan pada server!" };
+  }
+}
+
+export async function getAllExpenses() {
+  try {
+    const supabase = await createClient();
+
+    const { data, error } = await supabase
+      .from("expenses")
+      .select("id, date, amount, category, paymentMethod: payment_method, description")
+      .order("date", { ascending: false });
+
+    if (error) {
+      console.log("❌ Get Shift Cashflows Error :", error);
+      return { data: null, error: "Gagal mendapatkan data pengeluaran!" };
     }
 
     return { error: null, data };
