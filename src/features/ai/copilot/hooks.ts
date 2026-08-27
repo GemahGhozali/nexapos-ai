@@ -24,9 +24,10 @@ export function useCopilotChat({ onGetCopilotResponse }: UseCopilotChatParams) {
       if (!response.data || !response.success) throw response;
       return response;
     },
-
-    onSuccess: (response) => {
+    onMutate: () => {
       form.reset();
+    },
+    onSuccess: (response) => {
       onGetCopilotResponse(response.data);
     },
   });
