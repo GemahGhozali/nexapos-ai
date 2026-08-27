@@ -2,7 +2,6 @@
 
 import { toast } from "@/components/ui/toast";
 import { useForm } from "react-hook-form";
-import { useRouter } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ActionResponse } from "@/types";
 import { runAction, runQuery } from "@/utils/tanstack-runner";
@@ -20,7 +19,6 @@ interface UseAllExpensesParams {
 }
 
 export function useExpenseForm({ insertDataIntoActiveShift }: UseExpenseFormParams) {
-  const router = useRouter();
   const queryClient = useQueryClient();
 
   const form = useForm<ExpenseInput>({
@@ -43,7 +41,6 @@ export function useExpenseForm({ insertDataIntoActiveShift }: UseExpenseFormPara
     onSuccess: (response: ActionResponse) => {
       toast.add({ type: "success", description: response.message });
       queryClient.invalidateQueries({ queryKey: ["expenses"] });
-      router.replace("/dashboard/expense");
     },
 
     onError: (response: ActionResponse) => {
