@@ -34,18 +34,19 @@ export async function getKpiStats(shiftId: string): Promise<KpiStats> {
   try {
     const supabase = await createClient();
 
-    const { data, error } = await supabase.from("cashflows").select("type, amount").eq("shift_id", shiftId);
+    const [transactions, expenses] = await Promise.all([
+      supabase.from("transactions").select("total_amount").eq("shift_id", shiftId),
+      supabase.from("expenses").select("amount").eq("shift_id", shiftId),
+    ]);
 
-    if (error) {
-      console.log("❌ Get KPI Stats Error :", error);
+    if (transactions.error || expenses.error) {
+      console.log("❌ Get KPI Stats Error :", { transactions: transactions.error, expenses: expenses.error });
       throw new Error("Gagal mengambil data indikator kinerja (KPI)!");
     }
 
-    const incomeData = data.filter((cashflow) => cashflow.type === "income");
-
-    const totalTransactions = incomeData.length;
-    const totalIncome = incomeData.reduce((total, cashflow) => total + cashflow.amount, 0);
-    const totalExpense = data.filter((cashflow) => cashflow.type === "expense").reduce((total, cashflow) => total + cashflow.amount, 0);
+    const totalTransactions = transactions.data.length;
+    const totalIncome = transactions.data.reduce((sum, transaction) => sum + transaction.total_amount, 0);
+    const totalExpense = expenses.data.reduce((sum, expense) => sum + expense.amount, 0);
     const totalNetIncome = totalIncome - totalExpense;
 
     return { totalIncome, totalExpense, totalNetIncome, totalTransactions };
@@ -60,21 +61,20 @@ export async function getCashDrawerDetails(shiftId: string): Promise<CashDrawerD
   try {
     const supabase = await createClient();
 
-    const [shift, cashflows] = await Promise.all([
+    const [shift, transactions, expenses] = await Promise.all([
       supabase.from("shifts").select("opening_cash").eq("id", shiftId).single(),
-      supabase.from("cashflows").select("type, amount").eq("shift_id", shiftId).eq("payment_method", "cash"),
+      supabase.from("transactions").select("total_amount").eq("shift_id", shiftId).eq("payment_method", "cash"),
+      supabase.from("expenses").select("amount").eq("shift_id", shiftId).eq("payment_method", "cash"),
     ]);
 
-    if (shift.error || cashflows.error) {
-      console.log("❌ Get Cash Drawer Stats Error :", { shiftError: shift.error, cashflowsError: cashflows.error });
+    if (shift.error || transactions.error || expenses.error) {
+      console.log("❌ Get Cash Drawer Stats Error :", { shift: shift.error, transactions: transactions.error, expenses: expenses.error });
       throw new Error("Gagal menghitung rincian laci kas!");
     }
 
     const startingCash = shift.data.opening_cash;
-
-    const cashIncome = cashflows.data.filter((cashflow) => cashflow.type === "income").reduce((sum, cashflow) => sum + cashflow.amount, 0);
-
-    const cashExpense = cashflows.data.filter((cashflow) => cashflow.type === "expense").reduce((sum, cashflow) => sum + cashflow.amount, 0);
+    const cashIncome = transactions.data.reduce((sum, transaction) => sum + transaction.total_amount, 0);
+    const cashExpense = expenses.data.reduce((sum, cashflow) => sum + cashflow.amount, 0);
 
     return {
       startingCash,
@@ -93,18 +93,18 @@ export async function getPaymentMethodProportion(shiftId: string): Promise<Payme
   try {
     const supabase = await createClient();
 
-    const { data, error } = await supabase.from("cashflows").select("payment_method, amount").eq("shift_id", shiftId).eq("type", "income");
+    const { data, error } = await supabase.from("transactions").select("payment_method, total_amount").eq("shift_id", shiftId);
 
     if (error) {
       console.log("❌ Get Payment Method Pie Data Error :", error);
       throw new Error("Gagal mengambil data proporsi pembayaran!");
     }
 
-    const cashData = data.filter((cashflow) => cashflow.payment_method === "cash");
-    const totalCashRevenue = cashData.reduce((total, cashflow) => total + cashflow.amount, 0);
+    const cashData = data.filter((transaction) => transaction.payment_method === "cash");
+    const totalCashRevenue = cashData.reduce((sum, transaction) => sum + transaction.total_amount, 0);
 
-    const transferData = data.filter((cashflow) => cashflow.payment_method === "transfer");
-    const totalTransferRevenue = transferData.reduce((total, cashflow) => total + cashflow.amount, 0);
+    const transferData = data.filter((transaction) => transaction.payment_method === "transfer");
+    const totalTransferRevenue = transferData.reduce((sum, transaction) => sum + transaction.total_amount, 0);
 
     return [
       {
