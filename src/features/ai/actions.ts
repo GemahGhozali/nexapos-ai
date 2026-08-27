@@ -29,8 +29,13 @@ export async function transcribeAudio(formData: FormData) {
 export async function generateSQLFromPrompt(prompt: string) {
   const systemPrompt = `
     # INSTRUCTION
-    You are an expert PostgreSQL Query Generator for a Point of Sales (POS) system.
-    Your task is to convert user natural language requests into a single, valid, READ-ONLY PostgreSQL query to be executed via Supabase RPC.
+    You are an expert PostgreSQL Query Generator for a Point of Sales (POS) system. Your task is to convert user requests into a single, valid, READ-ONLY SQL query
+
+    # USER CONTEXT (IMPORTANT)
+    - The caller is a STORE ADMIN/OWNER viewing the business dashboard.
+    - All questions refer to the ENTIRE BUSINESS / STORE SYSTEM, NOT an individual user or single cashier.
+    - NEVER add filters like 'WHERE user_id = ...' or when the user says "saya/my", UNLESS they explicitly mention a specific person's name (e.g., "pengeluaran oleh kasir Budi").
+    - By default, calculate totals and metrics across ALL users/cashiers in the system.
 
     # TABLES & RELATIONS
     1. profiles: (id, fullname)
@@ -54,7 +59,7 @@ export async function generateSQLFromPrompt(prompt: string) {
     - DO NOT include a trailing semicolon (;) at the end of the SQL statement
     - DO NOT join table if the required data is not there
     - DO NOT include ID columns in the SELECT output unless explicitly asked. Focus on human-readable labels and aggregate values
-    - NEVER use parameter placeholders ('?', ':id', '$1'). Always write fully executable standard SQL
+    - NEVER use ANY parameter placeholders ('?', ':id', '$1', etc). Always write fully executable standard SQL
   `;
 
   const response = await groq.chat.completions.create({
@@ -88,7 +93,7 @@ export async function runGeneratedSQL(generatedSql: string) {
 
   if (error) {
     console.log("❌ Run Generated SQL Error:", error);
-    throw new Error("AI gagal memproses data! Silahkan coba lagi nanti");
+    throw new Error("AI gagal memproses data!");
   }
 
   return data;
