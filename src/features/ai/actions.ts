@@ -42,7 +42,7 @@ export async function generateSQLFromPrompt(prompt: string) {
     2. shifts: (id, user_id [FK profiles.id], opening_cash, closing_cash, expected_cash, cash_difference, status['open','closed'], opened_at, closed_at)
     3. transactions: (id, shift_id [FK shifts.id], date, total_amount, payment_method['cash','transfer'], paid_amount, change_amount)
     4. transaction_items: (id, transaction_id [FK transactions.id], product_name, price_at_sale, hpp_at_sale, quantity, subtotal)
-    5. cashflows: (id, shift_id [FK shifts.id], user_id [FK profiles.id], type['income','expense'], category, amount, payment_method['cash','transfer'], date)
+    5. expenses: (id, shift_id [FK shifts.id], user_id [FK profiles.id], category, amount, payment_method['cash','transfer'], date)
 
     # CALCULATION RULES (DO IT STEP BY STEP FROM TOP TO BELOW)
     - Gross Sales / Omzet = SUM(total_amount) FROM transactions
