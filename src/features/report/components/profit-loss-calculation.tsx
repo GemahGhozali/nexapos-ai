@@ -14,7 +14,7 @@ export function ProfitLossCalucalation({ data }: ProfitLossCalucalationProps) {
   const isProfit = data.totalNetProfit > 0;
 
   return (
-    <Card className="col-span-2">
+    <Card>
       <CardHeader>
         <CardTitle>Perhitungan Laba/Rugi</CardTitle>
         <CardDescription>Rincian perhitungan laba/rugi dari awal hingga akhir</CardDescription>
