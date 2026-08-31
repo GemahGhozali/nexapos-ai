@@ -2,6 +2,7 @@ import { CopilotSheet } from "@/features/ai/copilot/components/copilot-sheet";
 import { getFinancialReport } from "@/features/report/queries";
 import { FinancialKpiStatsCard } from "@/features/report/components/financial-kpi-stats-card";
 import { ProfitLossCalucalation } from "@/features/report/components/profit-loss-calculation";
+import { GenerativeInsightPanel } from "@/features/ai/generative-insight/components/generative-insight-panel";
 
 export default async function FinancialReportPage() {
   const data = await getFinancialReport();
@@ -16,7 +17,12 @@ export default async function FinancialReportPage() {
       </div>
       <FinancialKpiStatsCard data={data} />
       <div className="grid grid-cols-5 mb-0 gap-6">
-        <ProfitLossCalucalation data={data} />
+        <div className="col-span-2">
+          <ProfitLossCalucalation data={data} />
+        </div>
+        <div className="col-span-3">
+          <GenerativeInsightPanel />
+        </div>
       </div>
       <CopilotSheet />
     </div>
