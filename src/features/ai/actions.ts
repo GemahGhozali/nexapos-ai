@@ -76,6 +76,8 @@ export async function generateSQLFromPrompt(prompt: string) {
         schema: z.object({ sql: z.string().describe("The generated SQL query") }).toJSONSchema(),
       },
     },
+    temperature: 0.0,
+    top_p: 0.1,
   });
 
   const rawResult = JSON.parse(response.choices[0].message.content || "{}");
