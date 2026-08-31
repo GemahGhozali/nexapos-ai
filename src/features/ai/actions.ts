@@ -28,30 +28,65 @@ export async function transcribeAudio(formData: FormData) {
 
 export async function generateSQLFromPrompt(prompt: string) {
   const systemPrompt = `
-    # INSTRUCTION
+    [Instruction]
     You are an expert PostgreSQL Query Generator for a Point of Sales (POS) system. Your task is to convert user requests into a single, valid, READ-ONLY SQL query
 
-    # USER CONTEXT (IMPORTANT)
+    [User Context]
     - The caller is a STORE ADMIN/OWNER viewing the business dashboard.
     - All questions refer to the ENTIRE BUSINESS / STORE SYSTEM, NOT an individual user or single cashier.
     - NEVER add filters like 'WHERE user_id = ...' or when the user says "saya/my", UNLESS they explicitly mention a specific person's name (e.g., "pengeluaran oleh kasir Budi").
-    - By default, calculate totals and metrics across ALL users/cashiers in the system.
 
-    # TABLES & RELATIONS
-    1. profiles: (id, fullname)
-    2. shifts: (id, user_id [FK profiles.id], opening_cash, closing_cash, expected_cash, cash_difference, status['open','closed'], opened_at, closed_at)
-    3. transactions: (id, shift_id [FK shifts.id], date, total_amount, payment_method['cash','transfer'], paid_amount, change_amount)
-    4. transaction_items: (id, transaction_id [FK transactions.id], product_name, price_at_sale, hpp_at_sale, quantity, subtotal)
-    5. expenses: (id, shift_id [FK shifts.id], user_id [FK profiles.id], category, amount, payment_method['cash','transfer'], date)
+    [Tables & Relations]
+    1. profiles
+      * id : uuid
+      * fullname : text
+    
+    2. shifts: 
+      * id : uuid
+      * user_id : FK profiles.id
+      * opening_cash : numeric
+      * closing_cash : numeric | null
+      * expected_cash : numeric | null
+      * cash_difference (Selisih Kas) : numeric | null
+      * status : enum('open','closed')
+      * opened_at : timestampz
+      * closed_at : timestampz
+    
+    3. transactions: 
+      * id : uuid
+      * shift_id FK shifts.id
+      * date : timestampz
+      * total_amount (Total Harga) : numeric
+      * payment_method : enum('cash','transfer')
+      * paid_amount (Total Bayar) : numeric
+      * change_amount (Total Kembalian) : numeric
+      
+    4. transaction_items: 
+      * id : uuid
+      * transaction_id : FK transactions.id
+      * product_name : text
+      * price_at_sale : numeric
+      * hpp_at_sale : numeric
+      * quantity : numeric
+      * subtotal (Total Harga) : numeric
+      
+    5. expenses: 
+      * id : uuid
+      * shift_id : FK shifts.id
+      * user_id : FK profiles.id
+      * category : text
+      * amount : numeric
+      * payment_method : enum('cash','transfer')
+      * date : timestampz
 
-    # CALCULATION RULES (DO IT STEP BY STEP FROM TOP TO BELOW)
+    [Profit Loss Calculation Rules (MAKE SURE TO DO IT IN ORDER, FROM TOP TO BELOW)]
     - Gross Sales / Omzet = SUM(total_amount) FROM transactions
     - COGS / HPP = SUM(hpp_at_sale * quantity) FROM transaction_items
     - Gross Profit / Laba Kotor = Gross Sales - Total COGS
-    - Total Expenses / Pengeluaran = SUM(amount) FROM cashflows WHERE type = 'expense'
+    - Total Expenses / Pengeluaran = SUM(amount) FROM expenses
     - Net Profit / Laba Bersih = Gross Profit - Total Expenses
 
-    # SQL RULES
+    [SQL Rules]
     - Ensure the SQL query is complete and never cut off
     - Output MUST be a valid JSON object: { "sql": "SQL_QUERY_HERE" }
     - ONLY generate 'SELECT' queries. Never use INSERT, UPDATE, DELETE, or DROP
@@ -60,6 +95,19 @@ export async function generateSQLFromPrompt(prompt: string) {
     - DO NOT join table if the required data is not there
     - DO NOT include ID columns in the SELECT output unless explicitly asked. Focus on human-readable labels and aggregate values
     - NEVER use ANY parameter placeholders ('?', ':id', '$1', etc). Always write fully executable standard SQL
+
+    [Table Mapping & Performance Rules]
+    - Expenses / Pengeluaran -> Query 'expenses' table.
+    - Sales / Omzet / Total Transaksi -> Query 'transactions' table.
+    - Top Products / Terlaris / HPP -> Query 'transaction_items' table.
+    - Shift History / Cashier Activity -> Join 'shifts' AND 'profiles' ON shifts.user_id = profiles.id.
+    - CRITICAL: DO NOT directly JOIN 'transactions' and 'transaction_items' for aggregate SUM functions to avoid duplicate/multiplied sum results.
+
+    [Query Intent Guidelines]
+    - Best-selling / Top products: Return product_name, total quantity sold (SUM(quantity)), and total revenue (SUM(subtotal)). Group by product_name and order by total quantity descending.
+    - User/Cashier Shift History: Return profile's fullname, opened_at, closed_at, status, and cash_difference. Join 'shifts' with 'profiles'.
+    - Expense breakdown/history: Return date, category, and total amount spent (SUM(amount) or amount). Group by category/date when aggregating.
+    - Transaction Volume Trend: Return truncated date (e.g., DATE(date)) and count of transactions (COUNT(id)) or total sales (SUM(total_amount)) grouped by date.
   `;
 
   const response = await groq.chat.completions.create({
