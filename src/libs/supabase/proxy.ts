@@ -27,14 +27,14 @@ export async function supabaseProxy(request: NextRequest) {
 
   const url = request.nextUrl.clone();
 
-  // Jika user belum login & mencoba akses halaman terproteksi
-  if (!user && url.pathname.startsWith("/dashboard")) {
+  // Jika user belum login & akses halaman terproteksi atau root
+  if (!user && (url.pathname === "/" || url.pathname.startsWith("/dashboard"))) {
     url.pathname = "/login";
     return NextResponse.redirect(url);
   }
 
-  // Jika user SUDAH login tapi mencoba akses halaman /login
-  if (user && url.pathname === "/login") {
+  // Jika user SUDAH login & akses / atau /login
+  if (user && (url.pathname === "/" || url.pathname === "/login")) {
     url.pathname = "/dashboard";
     return NextResponse.redirect(url);
   }
