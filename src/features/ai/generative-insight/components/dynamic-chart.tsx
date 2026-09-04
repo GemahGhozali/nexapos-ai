@@ -35,18 +35,12 @@ export function generateChartConfig<T>({ data, xAxisKey, chartKeys, chartType }:
   if (chartType === "pie") {
     const uniqueCategories = Array.from(new Set(data.map((item) => String(item[xAxisKey]))));
 
-    uniqueCategories.forEach((category, index) => {
-      config[category] = {
-        label: category,
-        color: CHART_COLORS[index % CHART_COLORS.length],
-      };
+    uniqueCategories.forEach((category) => {
+      config[category] = { label: category };
     });
   } else {
-    chartKeys.forEach((key, index) => {
-      config[key] = {
-        label: formatLabel(String(key)),
-        color: CHART_COLORS[index % CHART_COLORS.length],
-      };
+    chartKeys.forEach((key) => {
+      config[key] = { label: formatLabel(key) };
     });
   }
 
@@ -55,7 +49,6 @@ export function generateChartConfig<T>({ data, xAxisKey, chartKeys, chartType }:
 
 export function DynamicChart<T>({ chartType, data, xAxisKey, chartKeys }: DynamicChartProps<T>) {
   const chartConfig = generateChartConfig({ data, xAxisKey, chartKeys, chartType });
-  console.log(chartConfig);
 
   const renderChart = () => {
     if (chartType === "bar") {
@@ -85,9 +78,10 @@ function AreaChartComponent<T>({ data, xAxisKey, chartKeys }: Omit<DynamicChartP
     <AreaChart accessibilityLayer data={data}>
       <XAxis dataKey={xAxisKey} tickLine={false} axisLine={false} tickMargin={8} />
       <ChartTooltip cursor={false} content={<ChartTooltipContent indicator="line" />} />
-      {chartKeys.map((value) => (
-        <Area key={value} dataKey={value} fill={`var(--color-${value})`} stroke={`var(--color-${value})`} type="natural" fillOpacity={0.4} />
-      ))}
+      {chartKeys.map((key, index) => {
+        const color = CHART_COLORS[index % CHART_COLORS.length];
+        return <Area key={key} dataKey={key} fill={color} stroke={color} type="monotone" fillOpacity={0.4} />;
+      })}
     </AreaChart>
   );
 }
@@ -97,9 +91,10 @@ function LineChartComponent<T>({ data, xAxisKey, chartKeys }: Omit<DynamicChartP
     <LineChart accessibilityLayer data={data}>
       <XAxis dataKey={xAxisKey} tickLine={false} axisLine={false} tickMargin={8} />
       <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-      {chartKeys.map((value) => (
-        <Line key={value} dataKey={value} stroke={`var(--color-${value})`} type="natural" strokeWidth={2} activeDot={{ r: 6 }} />
-      ))}
+      {chartKeys.map((key, index) => {
+        const color = CHART_COLORS[index % CHART_COLORS.length];
+        return <Line key={key} dataKey={key} stroke={color} type="monotone" strokeWidth={2} activeDot={{ r: 6 }} />;
+      })}
     </LineChart>
   );
 }
@@ -109,9 +104,10 @@ function BarChartComponent<T>({ data, xAxisKey, chartKeys }: Omit<DynamicChartPr
     <BarChart accessibilityLayer data={data}>
       <XAxis dataKey={xAxisKey} tickLine={false} tickMargin={10} axisLine={false} />
       <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
-      {chartKeys.map((value) => (
-        <Bar key={value} dataKey={value} radius={8} fill={`var(--color-${value})`} />
-      ))}
+      {chartKeys.map((key, index) => {
+        const color = CHART_COLORS[index % CHART_COLORS.length];
+        return <Bar key={key} dataKey={key} radius={8} fill={color} />;
+      })}
     </BarChart>
   );
 }
@@ -123,9 +119,9 @@ function PieChartComponent<T>({ data, xAxisKey, chartKeys }: Omit<DynamicChartPr
     <PieChart>
       <ChartTooltip cursor={false} content={<ChartTooltipContent hideLabel />} />
       <Pie data={data} nameKey={xAxisKey} dataKey={dataKey} innerRadius={80}>
-        {data.map((entry, index) => {
-          const categoryName = entry[xAxisKey];
-          return <Cell key={`cell-${index}`} fill={`var(--color-${categoryName})`} />;
+        {data.map((_, index) => {
+          const color = CHART_COLORS[index % CHART_COLORS.length];
+          return <Cell key={`cell-${index}`} fill={color} />;
         })}
       </Pie>
     </PieChart>
