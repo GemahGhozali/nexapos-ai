@@ -40,11 +40,7 @@ export function GenerativeInsightInput({ onGetResult }: GenerativeInsightInputPr
           <PromptInput
             form={form}
             disabled={isPending}
-            placeholders={[
-              "Berapa pemasukan 1 minggu terakhir...",
-              "Proporsi pengeluaran operasional bulan ini...",
-              "Tren transaksi 2 minggu terakhir...",
-            ]}
+            placeholders={["Top 3 produk terlaris...", "Proporsi pengeluaran operasional bulan ini...", "Tren transaksi 1 minggu terakhir..."]}
           />
           {prompt.trim() !== "" ? (
             <Button type="submit" size="icon-lg" disabled={isPending}>
