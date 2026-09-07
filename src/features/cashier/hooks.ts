@@ -61,7 +61,6 @@ export function useCheckoutForm() {
       toast.add({ type: "success", description: response.message });
 
       queryClient.invalidateQueries({ queryKey: ["transactions"] });
-      queryClient.invalidateQueries({ queryKey: ["cashflows"] });
 
       clearCart();
       form.reset();

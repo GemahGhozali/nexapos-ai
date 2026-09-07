@@ -15,7 +15,7 @@ export const IntentSchema = z.object({
   intent: z
     .enum(["NEEDS_DATABASE", "GENERAL_CHAT"])
     .describe(
-      "Use 'NEEDS_DATABASE' if question requires data to answer (transactions, revenue, cashflows, products, cashiers, etc). Otherwise, use 'GENERAL_CHAT' (greetings, app help, general advice).",
+      "Use 'NEEDS_DATABASE' if question requires data to answer (transactions, revenue, products, cashiers, etc). Otherwise, use 'GENERAL_CHAT' (greetings, app help, general advice).",
     ),
 });
 

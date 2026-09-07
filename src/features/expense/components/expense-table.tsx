@@ -48,13 +48,13 @@ export function ExpenseTable({ title, description, insertDataIntoActiveShift, sh
           </TableRow>
         </TableHeader>
         <TableBody>
-          {data.map((cashflow) => (
-            <TableRow key={cashflow.id}>
-              <TableCell>{format(cashflow.date, "dd/MM/yyyy")}</TableCell>
-              <TableCell className="font-medium text-red-600">- {formatToIDR(cashflow.amount)}</TableCell>
-              <TableCell>{cashflow.category}</TableCell>
+          {data.map((expense) => (
+            <TableRow key={expense.id}>
+              <TableCell>{format(expense.date, "dd/MM/yyyy")}</TableCell>
+              <TableCell className="font-medium text-red-600">- {formatToIDR(expense.amount)}</TableCell>
+              <TableCell>{expense.category}</TableCell>
               <TableCell>
-                {cashflow.paymentMethod === "cash" ? (
+                {expense.paymentMethod === "cash" ? (
                   <p className="flex items-center gap-2">
                     <HugeiconsIcon icon={Wallet01Icon} size={18} strokeWidth={1.5} />
                     Tunai
@@ -66,8 +66,8 @@ export function ExpenseTable({ title, description, insertDataIntoActiveShift, sh
                   </p>
                 )}
               </TableCell>
-              <TableCell>{cashflow.description}</TableCell>
-              {!showDataFromActiveShiftOnly && <TableCell>{cashflow.user.fullname}</TableCell>}
+              <TableCell>{expense.description}</TableCell>
+              {!showDataFromActiveShiftOnly && <TableCell>{expense.user.fullname}</TableCell>}
             </TableRow>
           ))}
         </TableBody>

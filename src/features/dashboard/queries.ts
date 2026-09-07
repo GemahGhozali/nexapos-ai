@@ -74,7 +74,7 @@ export async function getCashDrawerDetails(shiftId: string): Promise<CashDrawerD
 
     const startingCash = shift.data.opening_cash;
     const cashIncome = transactions.data.reduce((sum, transaction) => sum + transaction.total_amount, 0);
-    const cashExpense = expenses.data.reduce((sum, cashflow) => sum + cashflow.amount, 0);
+    const cashExpense = expenses.data.reduce((sum, expense) => sum + expense.amount, 0);
 
     return {
       startingCash,
