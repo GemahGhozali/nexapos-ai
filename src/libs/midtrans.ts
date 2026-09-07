@@ -15,6 +15,11 @@ type SnapTransactionParameter = {
     quantity: number;
     name: string;
   }>;
+  callbacks?: {
+    finish?: string;
+    unfinish?: string;
+    error?: string;
+  };
 };
 
 export type SnapTransactionResponse = {
@@ -71,8 +76,6 @@ export async function getMidtransTransactionStatus(transactionId: string): Promi
   const client = getCoreApiClient() as unknown as {
     transaction: { status: (id: string) => Promise<MidtransStatusResponse> };
   };
-
-  const clientTest = getCoreApiClient();
 
   const response = await client.transaction.status(transactionId);
   return response as MidtransStatusResponse;

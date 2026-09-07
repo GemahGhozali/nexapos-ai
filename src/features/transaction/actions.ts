@@ -92,6 +92,11 @@ export async function createTransaction(data: CheckoutTransactionInput) {
             quantity: item.quantity,
             name: item.productName,
           })),
+          callbacks: {
+            finish: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/dashboard/cashier`,
+            unfinish: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/dashboard/cashier`,
+            error: `${process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000"}/dashboard/cashier`,
+          },
         });
 
         const { error: updatePaymentError } = await supabase

@@ -6,4 +6,5 @@ export const ENVIRONMENT = {
   MIDTRANS_SERVER_KEY: process.env.MIDTRANS_SERVER_KEY,
   MIDTRANS_CLIENT_KEY: process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY,
   MIDTRANS_IS_PRODUCTION: process.env.MIDTRANS_IS_PRODUCTION === "true",
+  APP_URL: process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3000",
 };
