@@ -21,7 +21,7 @@ export function CopilotSheet() {
     <Sheet>
       <SheetTrigger
         render={
-          <Button size="lg" className="fixed right-6 bottom-6" variant="secondary">
+          <Button size="lg" className="fixed right-6 bottom-6" variant="default">
             <HugeiconsIcon icon={RoboticIcon} size={16} color="currentColor" strokeWidth={1.5} data-icon="inline-start" />
             Tanya AI
           </Button>
