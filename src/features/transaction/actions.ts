@@ -7,6 +7,7 @@ import { isRedirectError } from "next/dist/client/components/redirect-error";
 import { getCurrentUserAndActiveShift } from "../shift/queries";
 import { CheckoutTransactionSchema, CheckoutTransactionInput } from "./schemas";
 import { generateTransactionDetails, getProductInDatabaseByCartItems, validateCartItems } from "./utils";
+import { createSnapTransaction } from "@/libs/midtrans";
 
 export async function createTransaction(data: CheckoutTransactionInput) {
   try {
@@ -53,7 +54,7 @@ export async function createTransaction(data: CheckoutTransactionInput) {
     // Step 5 : Kalkulasi totalAmount, validasi paidAmount berdasarkan paymentMethod dan kalkulasi totalChange
     const totalAmount = transactionDetails.reduce((total, item) => total + item.subtotal, 0);
 
-    let finalPaidAmount = paidAmount;
+    const finalPaidAmount = paidAmount;
 
     if (paymentMethod === "cash" && finalPaidAmount < totalAmount) {
       return {
@@ -64,7 +65,62 @@ export async function createTransaction(data: CheckoutTransactionInput) {
     }
 
     if (paymentMethod === "transfer") {
-      finalPaidAmount = totalAmount;
+      const orderId = `ORDER-${Date.now()}-${crypto.randomUUID().slice(0, 8)}`;
+
+      const { error: createPaymentError } = await supabase.from("midtrans_payments").insert({
+        order_id: orderId,
+        user_id: user.id,
+        shift_id: shift.id,
+        total_amount: totalAmount,
+        cart_items: transactionDetails,
+      });
+
+      if (createPaymentError) {
+        console.log("❌ Create Midtrans Payment Error | Insert Payment :", createPaymentError);
+        return { success: false, message: "Gagal menyiapkan pembayaran Midtrans! Silahkan coba lagi." };
+      }
+
+      try {
+        const snapPayment = await createSnapTransaction({
+          transaction_details: {
+            order_id: orderId,
+            gross_amount: totalAmount,
+          },
+          item_details: transactionDetails.map((item) => ({
+            id: item.productId,
+            price: item.priceAtSale,
+            quantity: item.quantity,
+            name: item.productName,
+          })),
+        });
+
+        const { error: updatePaymentError } = await supabase
+          .from("midtrans_payments")
+          .update({
+            snap_token: snapPayment.token,
+            snap_redirect_url: snapPayment.redirect_url,
+          })
+          .eq("order_id", orderId)
+          .eq("user_id", user.id);
+
+        if (updatePaymentError) {
+          console.log("❌ Create Midtrans Payment Error | Update Snap Data :", updatePaymentError);
+          return { success: false, message: "Gagal menyimpan detail pembayaran Midtrans! Silahkan coba lagi." };
+        }
+
+        return {
+          success: true,
+          message: "Pembayaran Midtrans siap diproses.",
+          data: {
+            orderId,
+            token: snapPayment.token,
+            redirectUrl: snapPayment.redirect_url,
+          },
+        };
+      } catch (error) {
+        console.log("❌ Create Midtrans Payment Error | Snap :", error);
+        return { success: false, message: "Gagal membuat pembayaran Midtrans! Silahkan coba lagi." };
+      }
     }
 
     const totalChange = finalPaidAmount - totalAmount;

@@ -100,7 +100,7 @@ export function CheckoutFormSheet({ onCheckoutSuccess }: CheckoutFormDialogProps
                         <FieldContent>
                           <FieldTitle>
                             <HugeiconsIcon icon={CreditCardIcon} size={18} className="text-primary" strokeWidth={2} />
-                            Transfer
+                            Midtrans
                           </FieldTitle>
                         </FieldContent>
                         <RadioGroupItem value="transfer" id="transfer" aria-invalid={fieldState.invalid} />
@@ -108,7 +108,7 @@ export function CheckoutFormSheet({ onCheckoutSuccess }: CheckoutFormDialogProps
                     </FieldLabel>
                   </RadioGroup>
                   {selectedPaymentMethod === "transfer" && (
-                    <FieldDescription>Nominal pembayaran sudah otomatis disesuaikan dengan total pembayaran.</FieldDescription>
+                    <FieldDescription>Anda akan diarahkan ke halaman pembayaran Midtrans Sandbox.</FieldDescription>
                   )}
                   {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
                 </FieldSet>
@@ -140,7 +140,7 @@ export function CheckoutFormSheet({ onCheckoutSuccess }: CheckoutFormDialogProps
           </FieldGroup>
           <SheetFooter className="border-t p-4">
             <Button type="submit" disabled={isPending || !form.formState.isValid} className="w-full">
-              {isPending ? "Memproses" : "Konfirmasi Pembayaran"}
+              {isPending ? "Memproses" : selectedPaymentMethod === "transfer" ? "Bayar via Midtrans" : "Konfirmasi Pembayaran"}
               {isPending && <Spinner data-icon="inline-start" />}
             </Button>
           </SheetFooter>

@@ -10,6 +10,22 @@ import { createTransaction } from "@/features/transaction/actions";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { CheckoutTransactionInput, CheckoutTransactionSchema } from "@/features/transaction/schemas";
 
+function getPaymentRedirectUrl(response: ActionResponse): string | null {
+  const candidate: unknown = response;
+
+  if (typeof candidate !== "object" || candidate === null || !("data" in candidate)) {
+    return null;
+  }
+
+  const data = candidate.data;
+
+  if (typeof data !== "object" || data === null || !("redirectUrl" in data) || typeof data.redirectUrl !== "string") {
+    return null;
+  }
+
+  return data.redirectUrl;
+}
+
 export function useCheckoutForm() {
   const { cart, clearCart } = useCartStore((state) => state);
   const queryClient = useQueryClient();
@@ -32,6 +48,16 @@ export function useCheckoutForm() {
     mutationFn: (data: CheckoutTransactionInput) => runAction(() => createTransaction(data)),
 
     onSuccess: (response: ActionResponse) => {
+      const redirectUrl = getPaymentRedirectUrl(response);
+
+      if (redirectUrl) {
+        toast.add({ type: "success", description: "Pembayaran siap diproses di Midtrans." });
+        clearCart();
+        form.reset();
+        window.location.assign(redirectUrl);
+        return;
+      }
+
       toast.add({ type: "success", description: response.message });
 
       queryClient.invalidateQueries({ queryKey: ["transactions"] });

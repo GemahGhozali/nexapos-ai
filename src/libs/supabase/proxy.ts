@@ -4,6 +4,10 @@ import { NextResponse, NextRequest } from "next/server";
 import { ENVIRONMENT } from "@/config/env";
 
 export async function supabaseProxy(request: NextRequest) {
+  if (request.nextUrl.pathname === "/api/midtrans/notification") {
+    return NextResponse.next();
+  }
+
   requireEnv("NEXT_PUBLIC_SUPABASE_URL", "NEXT_PUBLIC_SUPABASE_PUBLISHABLE_KEY");
 
   let supabaseResponse = NextResponse.next({ request });

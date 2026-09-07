@@ -21,6 +21,7 @@
     "clsx": "^2.1.1",
     "date-fns": "^4.4.0",
     "groq-sdk": "^1.5.0",
+    "midtrans-client": "^1.4.3",
     "next": "16.2.11",
     "next-themes": "^0.4.6",
     "react": "19.2.4",
@@ -37,6 +38,7 @@
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
+    "@types/midtrans-client": "^1.4.0",
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
