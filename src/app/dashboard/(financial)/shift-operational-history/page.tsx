@@ -1,3 +1,5 @@
+import { ShiftTable } from "@/features/shift/components/shift-table";
+
 export default function OperationalShiftHistoryPage() {
-  return <div>Halaman Riwayat Operasional Shift</div>;
+  return <ShiftTable />;
 }

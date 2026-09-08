@@ -97,6 +97,7 @@ export const segmentMapping: Record<string, string> = {
   ...mappedSegment,
   create: "Tambah Data",
   update: "Edit Data",
+  detail: "Detail",
 };
 
 export const sidebarGroups = [

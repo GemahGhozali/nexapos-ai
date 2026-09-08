@@ -2,10 +2,11 @@
 
 import { toast } from "@/components/ui/toast";
 import { useForm } from "react-hook-form";
-import { runAction } from "@/utils/tanstack-runner";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { useMutation } from "@tanstack/react-query";
+import { getAllShifts } from "./queries";
 import { ActionResponse } from "@/types";
+import { runAction, runQuery } from "@/utils/tanstack-runner";
+import { useMutation, useQuery } from "@tanstack/react-query";
 import { openShift, closeShift } from "./actions";
 import { OpeningShiftSchema, OpeningShiftInput, ClosingShiftSchema, ClosingShiftInput } from "./schemas";
 
@@ -53,4 +54,11 @@ export function useCloseShiftForm() {
   });
 
   return { mutateAsync, form, isPending };
+}
+
+export function useAllShifts() {
+  return useQuery({
+    queryKey: ["shifts"],
+    queryFn: () => runQuery(getAllShifts),
+  });
 }
