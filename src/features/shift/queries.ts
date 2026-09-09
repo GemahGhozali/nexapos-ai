@@ -2,7 +2,7 @@
 
 import { createClient } from "@/libs/supabase/server";
 import { QueryResponse } from "@/types";
-import { ShiftHistory } from "./types";
+import { ShiftHistory, ShiftDetail } from "./types";
 
 export async function getCurrentUserAndActiveShift() {
   try {
@@ -106,6 +106,98 @@ export async function getAllShifts(): Promise<QueryResponse<ShiftHistory[]>> {
     return { data, error: null };
   } catch (error) {
     console.log("❌ Get All Shifts Error :", error);
+    return { data: null, error: "Terjadi kesalahan pada server!" };
+  }
+}
+
+export async function getShiftDetail(shiftId: string): Promise<QueryResponse<ShiftDetail>> {
+  try {
+    const supabase = await createClient();
+
+    const { data: shift, error: shiftError } = await supabase
+      .from("shifts")
+      .select("id, status, opening_cash, closing_cash, cash_difference, opened_at, closed_at, user: profiles(fullname)")
+      .eq("id", shiftId)
+      .single();
+
+    if (shiftError) {
+      console.log("❌ Get Shift Detail Error :", shiftError);
+      return { data: null, error: "Gagal mengambil data shift!" };
+    }
+
+    const [transactionsResult, expensesResult] = await Promise.all([
+      supabase.from("transactions").select("total_amount, payment_method").eq("shift_id", shiftId),
+      supabase.from("expenses").select("amount, category, payment_method").eq("shift_id", shiftId),
+    ]);
+
+    if (transactionsResult.error) {
+      console.log("❌ Get Shift Transactions Error :", transactionsResult.error);
+      return { data: null, error: "Gagal mengambil data transaksi shift!" };
+    }
+
+    if (expensesResult.error) {
+      console.log("❌ Get Shift Expenses Error :", expensesResult.error);
+      return { data: null, error: "Gagal mengambil data pengeluaran shift!" };
+    }
+
+    const transactions = transactionsResult.data || [];
+    const expenses = expensesResult.data || [];
+
+    const totalIncome = transactions.reduce((sum, t) => sum + t.total_amount, 0);
+    const totalExpense = expenses.reduce((sum, e) => sum + e.amount, 0);
+    const totalTransactions = transactions.length;
+
+    const cashIncome = transactions.filter((t) => t.payment_method === "cash").reduce((sum, t) => sum + t.total_amount, 0);
+
+    const cashExpense = expenses.filter((e) => e.payment_method === "cash").reduce((sum, e) => sum + e.amount, 0);
+
+    const paymentMethodMap = new Map<string, { total: number; count: number }>();
+    transactions.forEach((t) => {
+      const existing = paymentMethodMap.get(t.payment_method) || { total: 0, count: 0 };
+      paymentMethodMap.set(t.payment_method, { total: existing.total + t.total_amount, count: existing.count + 1 });
+    });
+
+    const paymentMethodProportion = Array.from(paymentMethodMap.entries()).map(([method, data]) => ({
+      method,
+      total: data.total,
+      count: data.count,
+    }));
+
+    const categoryMap = new Map<string, { total: number; count: number }>();
+    expenses.forEach((e) => {
+      const existing = categoryMap.get(e.category) || { total: 0, count: 0 };
+      categoryMap.set(e.category, { total: existing.total + e.amount, count: existing.count + 1 });
+    });
+
+    const expenseByCategory = Array.from(categoryMap.entries()).map(([category, data]) => ({
+      category,
+      total: data.total,
+      count: data.count,
+    }));
+
+    const user = Array.isArray(shift.user) ? shift.user[0] : shift.user;
+
+    const data: ShiftDetail = {
+      id: shift.id,
+      userName: user?.fullname || "-",
+      status: shift.status as "open" | "closed",
+      openingCash: shift.opening_cash,
+      closingCash: shift.closing_cash,
+      cashDifference: shift.cash_difference,
+      openedAt: shift.opened_at,
+      closedAt: shift.closed_at,
+      totalIncome,
+      totalExpense,
+      totalTransactions,
+      cashIncome,
+      cashExpense,
+      paymentMethodProportion,
+      expenseByCategory,
+    };
+
+    return { data, error: null };
+  } catch (error) {
+    console.log("❌ Get Shift Detail Error :", error);
     return { data: null, error: "Terjadi kesalahan pada server!" };
   }
 }
