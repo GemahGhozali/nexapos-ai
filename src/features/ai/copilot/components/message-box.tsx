@@ -72,7 +72,7 @@ export function MessageBox({ messages, mutation }: MessageBoxProps) {
                   <Message>
                     <MessageContent className="leading-6 gap-1">
                       <CopilotChatProfile />
-                      <p className="text-muted-foreground animate-pulse">AI Business Copilot sedang memproses...</p>
+                      <p className="text-muted-foreground shimmer">AI Business Copilot sedang memproses...</p>
                     </MessageContent>
                   </Message>
                 </MessageScrollerItem>
