@@ -25,7 +25,7 @@ export function ShiftTableSkeleton() {
             <TableCell className="min-w-32">
               <Skeleton className="h-9 w-full rounded-md" />
             </TableCell>
-            <TableCell className="min-w-32">
+            <TableCell className="w-28">
               <Skeleton className="h-9 w-full rounded-full" />
             </TableCell>
           </TableRow>

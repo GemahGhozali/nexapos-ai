@@ -29,9 +29,9 @@ export function ShiftTable() {
       <Table>
         <TableHeader>
           <TableRow>
+            <TableHead>Status Shift</TableHead>
             <TableHead>Tanggal Buka</TableHead>
             <TableHead>Karyawan</TableHead>
-            <TableHead>Status Shift</TableHead>
             <TableHead>Total Pemasukan</TableHead>
             <TableHead>Total Pengeluaran</TableHead>
             <TableHead>Selisih Kas</TableHead>
@@ -41,11 +41,15 @@ export function ShiftTable() {
         <TableBody>
           {data.map((shift) => (
             <TableRow key={shift.id}>
+              <TableCell>
+                <Badge
+                  className={cn("px-2 py-3", shift.status === "open" ? "bg-green-600/20 text-green-600" : "bg-secondary text-secondary-foreground")}
+                >
+                  {shift.status === "open" ? "Buka" : "Tutup"}
+                </Badge>
+              </TableCell>
               <TableCell>{format(new Date(shift.openedAt), "dd/MM/yyyy")}</TableCell>
               <TableCell className="font-medium">{shift.userName}</TableCell>
-              <TableCell>
-                <Badge variant={shift.status === "open" ? "default" : "secondary"}>{shift.status === "open" ? "Buka" : "Tutup"}</Badge>
-              </TableCell>
               <TableCell className={cn("font-medium", shift.totalIncome > 0 && "text-green-600 before:content-['+_']")}>
                 {formatToIDR(shift.totalIncome)}
               </TableCell>
