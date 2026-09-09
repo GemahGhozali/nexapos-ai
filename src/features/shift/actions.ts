@@ -69,19 +69,19 @@ export async function closeShift(data: ClosingShiftInput) {
 
     if (!shift) return { success: false, message: "Shift yang ingin ditutup tidak ditemukan!" };
 
-    const { data: totalCashTransactions, error: getTotalCashTransactionsError } = await supabase
-      .from("transactions")
-      .select("total_amount")
-      .eq("shift_id", shift.id)
-      .eq("payment_method", "cash");
+    const [transactions, expenses] = await Promise.all([
+      supabase.from("transactions").select("total_amount").eq("shift_id", shift.id).eq("payment_method", "cash"),
+      supabase.from("expenses").select("amount").eq("shift_id", shift.id).eq("payment_method", "cash"),
+    ]);
 
-    if (getTotalCashTransactionsError) {
-      console.log("❌ Close Shift Error:", getTotalCashTransactionsError);
+    if (transactions.error || expenses.error) {
+      console.log("❌ Close Shift Error:", { transactions: transactions.error, expenses: expenses.error });
       return { success: false, message: "Gagal menutup shift!" };
     }
 
-    const totalCashIn = totalCashTransactions.reduce((total, cash) => total + cash.total_amount, 0);
-    const expectedCash = shift.openingCash + totalCashIn;
+    const totalCashIn = transactions.data.reduce((total, cash) => total + cash.total_amount, 0);
+    const totalCashOut = expenses.data.reduce((total, cash) => total + cash.amount, 0);
+    const expectedCash = shift.openingCash + totalCashIn - totalCashOut;
     const cashDifference = closingCash - expectedCash;
 
     const { error: closingShiftError } = await supabase
