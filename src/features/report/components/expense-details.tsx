@@ -14,6 +14,15 @@ interface ExpenseDetailsProps {
 }
 
 export function ExpenseDetails({ data }: ExpenseDetailsProps) {
+  if (data.totalExpenses === 0) {
+    return (
+      <div className="flex items-center justify-between">
+        <p className="text-muted-foreground">Pengeluaran Operasional</p>
+        <p className="font-medium text-muted-foreground">{formatToIDR(data.totalExpenses)}</p>
+      </div>
+    );
+  }
+
   return (
     <Collapsible className="space-y-4 text-sm">
       <CollapsibleTrigger

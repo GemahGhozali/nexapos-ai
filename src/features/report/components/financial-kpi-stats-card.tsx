@@ -11,6 +11,7 @@ interface FinancialKpiStatsCardProps {
 
 export function FinancialKpiStatsCard({ data }: FinancialKpiStatsCardProps) {
   const isProfit = data.totalNetProfit > 0;
+  const isEven = data.totalNetProfit === 0;
 
   return (
     <div className="grid grid-cols-4 gap-6">
@@ -38,7 +39,7 @@ export function FinancialKpiStatsCard({ data }: FinancialKpiStatsCardProps) {
             <HugeiconsIcon icon={Analytics01Icon} size={24} color="currentColor" strokeWidth={1.5} />
           </div>
           <CardDescription>Laba/Rugi Bersih</CardDescription>
-          <CardTitle className={cn("text-2xl", isProfit ? "before:content-['+_']" : "before:content-['-_']")}>
+          <CardTitle className={cn("text-2xl", isEven ? "" : isProfit ? "before:content-['+_']" : "before:content-['-_']")}>
             {formatToIDR(Math.abs(data.totalNetProfit))}
           </CardTitle>
         </CardHeader>

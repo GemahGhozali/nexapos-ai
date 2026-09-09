@@ -12,6 +12,7 @@ interface ProfitLossCalucalationProps {
 
 export function ProfitLossCalucalation({ data }: ProfitLossCalucalationProps) {
   const isProfit = data.totalNetProfit > 0;
+  const isEven = data.totalNetProfit === 0;
 
   return (
     <Card>
@@ -44,7 +45,7 @@ export function ProfitLossCalucalation({ data }: ProfitLossCalucalationProps) {
           <Separator />
           <CardFooter className="text-base justify-between">
             <p className="text-muted-foreground">Laba/Rugi Bersih</p>
-            <p className={cn("font-medium", isProfit ? "before:content-['+_']" : "before:content-['-_']")}>
+            <p className={cn("font-medium", isEven ? "" : isProfit ? "before:content-['+_']" : "before:content-['-_']")}>
               {formatToIDR(Math.abs(data.totalNetProfit))}
             </p>
           </CardFooter>

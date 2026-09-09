@@ -17,8 +17,7 @@ export function ProfitLossIndicator({ totalNetProfit }: ProfitLossIndicatorProps
       <div
         className={cn(
           "mx-auto size-12 rounded-full grid place-content-center mb-3",
-          isEven && "bg-muted text-muted-foreground",
-          isProfit ? "bg-green-600/20 text-green-600" : "bg-red-600/20 text-red-600",
+          isEven ? "bg-muted text-muted-foreground" : isProfit ? "bg-green-600/20 text-green-600" : "bg-red-600/20 text-red-600",
         )}
       >
         <HugeiconsIcon icon={isEven ? Analytics01Icon : isProfit ? TradeUpIcon : TradeDownIcon} size={24} color="currentColor" strokeWidth={1.5} />
@@ -26,7 +25,7 @@ export function ProfitLossIndicator({ totalNetProfit }: ProfitLossIndicatorProps
       <CardDescription>
         {isEven ? "Anda belum mendapatkan keuntungan" : isProfit ? "Anda mendapatkan profit sebesar" : "Anda mengalami kerugian sebesar"}
       </CardDescription>
-      <CardTitle className={cn("text-2xl", isProfit ? "before:content-['+_']" : "before:content-['-_']")}>
+      <CardTitle className={cn("text-2xl", isEven ? "" : isProfit ? "before:content-['+_']" : "before:content-['-_']")}>
         {formatToIDR(Math.abs(totalNetProfit))}
       </CardTitle>
     </CardHeader>
